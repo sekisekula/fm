@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+.env.bak
+.venv/
+data/
+.mypy_cache/
+paragony od lutego do konca kwietnia/
+app/__pycache__/
+app/.env
+.dockerignore

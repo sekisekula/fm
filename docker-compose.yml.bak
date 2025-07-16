@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: ${DB_USER_LOCAL:-postgres} # Domyślna wartość, jeśli nie ma DB_USER_LOCAL
+      POSTGRES_PASSWORD: ${DB_PASSWORD_LOCAL:-postgres} # Domyślna wartość
+      POSTGRES_DB: ${DB_NAME_LOCAL:-postgres} # Domyślna wartość
+    ports:
+      - "5432:5432"
+  app:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST_INTERNAL: ${DB_HOST}
+      DB_PORT_INTERNAL: ${DB_PORT}
+    volumes:
+      - ./app:/app/app
+      - ./data/to_check:/data/to_check
+command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+volumes:
+  db_data:

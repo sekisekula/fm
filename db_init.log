@@ -1,0 +1,841 @@
+2025-06-30 23:08:29,345 - __main__ - INFO - Starting database initialization...
+2025-06-30 23:08:29,345 - __main__ - INFO - Creating database schema...
+2025-06-30 23:08:32,062 - __main__ - ERROR - Error during database initialization: (psycopg2.OperationalError) could not translate host name "db" to address: Nieznany host. 
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-06-30 23:08:32,062 - __main__ - ERROR - Database initialization failed
+2025-06-30 23:17:08,355 - __main__ - INFO - Starting database initialization...
+2025-06-30 23:17:08,355 - __main__ - INFO - Creating database schema...
+2025-06-30 23:17:11,062 - __main__ - ERROR - Error during database initialization: (psycopg2.OperationalError) could not translate host name "db" to address: Nieznany host. 
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-06-30 23:17:11,064 - __main__ - ERROR - Database initialization failed
+2025-06-30 23:17:51,756 - __main__ - INFO - Connecting to database at aws-0-eu-central-1.pooler.supabase.com
+2025-06-30 23:17:51,851 - __main__ - INFO - Starting database initialization...
+2025-06-30 23:17:51,851 - __main__ - INFO - Creating database schema...
+2025-06-30 23:17:52,284 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-06-30 23:17:52,284 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-06-30 23:17:52,374 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-06-30 23:17:52,374 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-06-30 23:17:52,452 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-06-30 23:17:52,452 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-06-30 23:17:52,527 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:52,527 - sqlalchemy.engine.Engine - INFO - -- Create table stores
+CREATE TABLE IF NOT EXISTS stores (
+    store_id SERIAL PRIMARY KEY,
+    store_name VARCHAR(255) NOT NULL,
+    store_city VARCHAR(255),
+    store_address VARCHAR(255) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL,
+    tax_id VARCHAR(20),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (store_name, store_address, postal_code, tax_id)
+)
+2025-06-30 23:17:52,529 - sqlalchemy.engine.Engine - INFO - [generated in 0.00081s] {}
+2025-06-30 23:17:52,612 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:52,650 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:52,650 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table users
+CREATE TABLE IF NOT EXISTS users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+2025-06-30 23:17:52,651 - sqlalchemy.engine.Engine - INFO - [generated in 0.00052s] {}
+2025-06-30 23:17:52,723 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:52,759 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:52,759 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table user_payments
+-- This table maps "payment_name" from receipt to user_id.
+-- One user can have MULTIPLE payment_names.
+CREATE TABLE IF NOT EXISTS user_payments (
+    user_payment_id SERIAL PRIMARY KEY, -- New primary key for record uniqueness
+    user_id INT NOT NULL REFERENCES users(user_id), -- Foreign key to users table
+    payment_name VARCHAR(255) NOT NULL, -- This is a unique payment name from receipt
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (payment_name) -- Ensures payment name uniqueness to map to only one user_payment_id
+)
+2025-06-30 23:17:52,760 - sqlalchemy.engine.Engine - INFO - [generated in 0.00062s] {}
+2025-06-30 23:17:52,840 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:52,891 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:52,891 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table receipts
+CREATE TABLE IF NOT EXISTS receipts (
+    receipt_id SERIAL PRIMARY KEY,
+    store_id INT NOT NULL REFERENCES stores(store_id),
+    receipt_number VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    final_price DECIMAL(10, 2) NOT NULL,
+    total_discounts DECIMAL(10, 2),
+    -- `payment_name` tutaj bêdzie kluczem obcym do `user_payments`
+    payment_name VARCHAR(255) NOT NULL REFERENCES user_payments(payment_name),
+    counted BOOLEAN DEFAULT FALSE,    -- Czy paragon zosta³ ju¿ podliczony
+    settled BOOLEAN DEFAULT FALSE,    -- Czy paragon zosta³ ju¿ rozliczony
+    finalized BOOLEAN DEFAULT FALSE,  -- Czy paragon zosta³ ju¿ sfinalizowany i nie powinien byæ uwzglêdniany w podsumowaniach
+    not_our_receipt BOOLEAN DEFAULT FALSE, -- Czy paragon nie nale¿y do nas
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    currency CHAR(3) NOT NULL DEFAULT 'PLN',
+    UNIQUE (store_id, receipt_number, date, time) -- Zapewnia unikalnoœæ paragonu
+)
+2025-06-30 23:17:52,891 - sqlalchemy.engine.Engine - INFO - [generated in 0.00076s] {}
+2025-06-30 23:17:52,982 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:53,037 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:53,038 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table products
+CREATE TABLE IF NOT EXISTS products (
+    product_id SERIAL PRIMARY KEY,
+    receipt_id INT NOT NULL REFERENCES receipts(receipt_id),
+    product_name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    tax_type CHAR(1) NOT NULL,
+    updated_at TIMESTAMP DEFAULT NOW(),
+    unit_price_before DECIMAL(10, 2) NOT NULL,
+    total_price_before DECIMAL(10, 2) NOT NULL,
+    unit_discount DECIMAL(10, 2),
+    total_discount DECIMAL(10, 2),
+    unit_after_discount DECIMAL(10, 2),
+    total_after_discount DECIMAL(10, 2) NOT NULL
+)
+2025-06-30 23:17:53,038 - sqlalchemy.engine.Engine - INFO - [generated in 0.00076s] {}
+2025-06-30 23:17:53,127 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:53,162 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:53,163 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table static_shares
+CREATE TABLE IF NOT EXISTS static_shares (
+    share_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    share DECIMAL(5,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (product_name)
+)
+2025-06-30 23:17:53,163 - sqlalchemy.engine.Engine - INFO - [generated in 0.00068s] {}
+2025-06-30 23:17:53,249 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:53,294 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:53,295 - sqlalchemy.engine.Engine - INFO - 
+
+CREATE TABLE IF NOT EXISTS static_shares_history (
+    history_id SERIAL PRIMARY KEY,
+    share_id INTEGER NOT NULL REFERENCES static_shares(share_id),
+    old_share DECIMAL(5,2),
+    new_share DECIMAL(5,2) NOT NULL,
+    changed_by VARCHAR(255) NOT NULL,
+    changed_at TIMESTAMP DEFAULT NOW(),
+    change_reason TEXT,
+    FOREIGN KEY (share_id) REFERENCES static_shares(share_id)
+)
+2025-06-30 23:17:53,295 - sqlalchemy.engine.Engine - INFO - [generated in 0.00080s] {}
+2025-06-30 23:17:53,373 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:53,412 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:53,413 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table for ignored payment names
+CREATE TABLE IF NOT EXISTS ignored_payment_names (
+    id SERIAL PRIMARY KEY,
+    payment_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (payment_name)
+)
+2025-06-30 23:17:53,413 - sqlalchemy.engine.Engine - INFO - [generated in 0.00064s] {}
+2025-06-30 23:17:53,492 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:53,532 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:53,532 - sqlalchemy.engine.Engine - INFO - 
+
+-- Removed weights_history table since it was referencing a non-existent weights table
+-- CREATE TABLE IF NOT EXISTS weights_history (
+--     history_id SERIAL PRIMARY KEY,
+--     weight_id INTEGER NOT NULL REFERENCES weights(weight_id),
+--     old_weight DECIMAL(5,2),
+--     new_weight DECIMAL(5,2) NOT NULL,
+--     changed_by VARCHAR(255) NOT NULL,
+--     changed_at TIMESTAMP DEFAULT NOW(),
+--     change_reason TEXT,
+--     FOREIGN KEY (weight_id) REFERENCES weights(weight_id)
+-- )
+2025-06-30 23:17:53,533 - sqlalchemy.engine.Engine - INFO - [generated in 0.00088s] {}
+2025-06-30 23:17:53,609 - __main__ - ERROR - Error executing statement: 
+
+-- Removed weights_history table since it was referencing a non-existent weights table
+-- CREATE TABLE IF NOT EXISTS weights_history (
+--     history_id SERIAL PRIMARY KEY,
+--     weight_id INTEGER NOT NULL REFERENCES weights(weight_id),
+--     old_weight DECIMAL(5,2),
+--     new_weight DECIMAL(5,2) NOT NULL,
+--     changed_by VARCHAR(255) NOT NULL,
+--     changed_at TIMESTAMP DEFAULT NOW(),
+--     change_reason TEXT,
+--     FOREIGN KEY (weight_id) REFERENCES weights(weight_id)
+-- )
+2025-06-30 23:17:53,609 - __main__ - ERROR - SQL Error: (psycopg2.ProgrammingError) can't execute an empty query
+[SQL: 
+
+-- Removed weights_history table since it was referencing a non-existent weights table
+-- CREATE TABLE IF NOT EXISTS weights_history (
+--     history_id SERIAL PRIMARY KEY,
+--     weight_id INTEGER NOT NULL REFERENCES weights(weight_id),
+--     old_weight DECIMAL(5,2),
+--     new_weight DECIMAL(5,2) NOT NULL,
+--     changed_by VARCHAR(255) NOT NULL,
+--     changed_at TIMESTAMP DEFAULT NOW(),
+--     change_reason TEXT,
+--     FOREIGN KEY (weight_id) REFERENCES weights(weight_id)
+-- )]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-06-30 23:17:53,610 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table weights
+-- This table stores percentage shares for EACH product on a receipt,
+-- which concern USER with ID=1.
+CREATE TABLE IF NOT EXISTS weights (
+    receipt_id INTEGER NOT NULL REFERENCES receipts(receipt_id),
+    product_id INTEGER NOT NULL REFERENCES products(product_id),
+    weight DECIMAL(5,2) NOT NULL,
+    PRIMARY KEY (receipt_id, product_id)
+)
+2025-06-30 23:17:53,610 - sqlalchemy.engine.Engine - INFO - [generated in 0.00027s] {}
+2025-06-30 23:17:53,663 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:53,704 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:53,704 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table manual_expenses
+CREATE TABLE IF NOT EXISTS manual_expenses (
+    manual_expense_id SERIAL PRIMARY KEY,
+    date DATE NOT NULL,
+    city VARCHAR(255),
+    description TEXT,
+    total_cost DECIMAL(10, 2) NOT NULL,
+    payer_user_id INT NOT NULL REFERENCES users(user_id),
+    share DECIMAL(5,2) NOT NULL, -- percentage for user1
+    counted BOOLEAN DEFAULT TRUE,
+    settled BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+2025-06-30 23:17:53,704 - sqlalchemy.engine.Engine - INFO - [generated in 0.00075s] {}
+2025-06-30 23:17:53,800 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:53,835 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:17:53,835 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table settlements
+CREATE TABLE IF NOT EXISTS settlements (
+    settlement_id SERIAL PRIMARY KEY,
+    payer_user_id INT NOT NULL REFERENCES users(user_id),
+    debtor_user_id INT NOT NULL REFERENCES users(user_id),
+    receipt_id INT REFERENCES receipts(receipt_id),
+    manual_expense_id INT REFERENCES manual_expenses(manual_expense_id),
+    amount DECIMAL(10,2) NOT NULL,
+    settled BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CHECK (payer_user_id != debtor_user_id)
+)
+2025-06-30 23:17:53,835 - sqlalchemy.engine.Engine - INFO - [generated in 0.00060s] {}
+2025-06-30 23:17:53,932 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:17:53,971 - __main__ - INFO - Running database migrations...
+2025-06-30 23:17:54,006 - __main__ - ERROR - Error during database initialization: No module named 'pydantic'
+2025-06-30 23:17:54,006 - __main__ - ERROR - Database initialization failed
+2025-06-30 23:19:13,717 - __main__ - INFO - Connecting to database at aws-0-eu-central-1.pooler.supabase.com
+2025-06-30 23:19:13,782 - __main__ - INFO - Starting database initialization...
+2025-06-30 23:19:13,783 - __main__ - INFO - Creating database schema...
+2025-06-30 23:19:14,334 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-06-30 23:19:14,334 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-06-30 23:19:14,417 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-06-30 23:19:14,417 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-06-30 23:19:14,496 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-06-30 23:19:14,497 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-06-30 23:19:14,576 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:14,576 - sqlalchemy.engine.Engine - INFO - -- Create table stores
+CREATE TABLE IF NOT EXISTS stores (
+    store_id SERIAL PRIMARY KEY,
+    store_name VARCHAR(255) NOT NULL,
+    store_city VARCHAR(255),
+    store_address VARCHAR(255) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL,
+    tax_id VARCHAR(20),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (store_name, store_address, postal_code, tax_id)
+)
+2025-06-30 23:19:14,576 - sqlalchemy.engine.Engine - INFO - [generated in 0.00062s] {}
+2025-06-30 23:19:14,652 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:14,697 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:14,697 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table users
+CREATE TABLE IF NOT EXISTS users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+2025-06-30 23:19:14,697 - sqlalchemy.engine.Engine - INFO - [generated in 0.00076s] {}
+2025-06-30 23:19:14,769 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:14,803 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:14,803 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table user_payments
+-- This table maps "payment_name" from receipt to user_id.
+-- One user can have MULTIPLE payment_names.
+CREATE TABLE IF NOT EXISTS user_payments (
+    user_payment_id SERIAL PRIMARY KEY, -- New primary key for record uniqueness
+    user_id INT NOT NULL REFERENCES users(user_id), -- Foreign key to users table
+    payment_name VARCHAR(255) NOT NULL, -- This is a unique payment name from receipt
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (payment_name) -- Ensures payment name uniqueness to map to only one user_payment_id
+)
+2025-06-30 23:19:14,804 - sqlalchemy.engine.Engine - INFO - [generated in 0.00051s] {}
+2025-06-30 23:19:14,878 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:14,917 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:14,918 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table receipts
+CREATE TABLE IF NOT EXISTS receipts (
+    receipt_id SERIAL PRIMARY KEY,
+    store_id INT NOT NULL REFERENCES stores(store_id),
+    receipt_number VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    final_price DECIMAL(10, 2) NOT NULL,
+    total_discounts DECIMAL(10, 2),
+    -- `payment_name` tutaj bêdzie kluczem obcym do `user_payments`
+    payment_name VARCHAR(255) NOT NULL REFERENCES user_payments(payment_name),
+    counted BOOLEAN DEFAULT FALSE,    -- Czy paragon zosta³ ju¿ podliczony
+    settled BOOLEAN DEFAULT FALSE,    -- Czy paragon zosta³ ju¿ rozliczony
+    finalized BOOLEAN DEFAULT FALSE,  -- Czy paragon zosta³ ju¿ sfinalizowany i nie powinien byæ uwzglêdniany w podsumowaniach
+    not_our_receipt BOOLEAN DEFAULT FALSE, -- Czy paragon nie nale¿y do nas
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    currency CHAR(3) NOT NULL DEFAULT 'PLN',
+    UNIQUE (store_id, receipt_number, date, time) -- Zapewnia unikalnoœæ paragonu
+)
+2025-06-30 23:19:14,918 - sqlalchemy.engine.Engine - INFO - [generated in 0.00132s] {}
+2025-06-30 23:19:14,997 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:15,046 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:15,046 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table products
+CREATE TABLE IF NOT EXISTS products (
+    product_id SERIAL PRIMARY KEY,
+    receipt_id INT NOT NULL REFERENCES receipts(receipt_id),
+    product_name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    tax_type CHAR(1) NOT NULL,
+    updated_at TIMESTAMP DEFAULT NOW(),
+    unit_price_before DECIMAL(10, 2) NOT NULL,
+    total_price_before DECIMAL(10, 2) NOT NULL,
+    unit_discount DECIMAL(10, 2),
+    total_discount DECIMAL(10, 2),
+    unit_after_discount DECIMAL(10, 2),
+    total_after_discount DECIMAL(10, 2) NOT NULL
+)
+2025-06-30 23:19:15,047 - sqlalchemy.engine.Engine - INFO - [generated in 0.00072s] {}
+2025-06-30 23:19:15,119 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:15,155 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:15,156 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table static_shares
+CREATE TABLE IF NOT EXISTS static_shares (
+    share_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    share DECIMAL(5,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (product_name)
+)
+2025-06-30 23:19:15,156 - sqlalchemy.engine.Engine - INFO - [generated in 0.00066s] {}
+2025-06-30 23:19:15,230 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:15,265 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:15,265 - sqlalchemy.engine.Engine - INFO - 
+
+CREATE TABLE IF NOT EXISTS static_shares_history (
+    history_id SERIAL PRIMARY KEY,
+    share_id INTEGER NOT NULL REFERENCES static_shares(share_id),
+    old_share DECIMAL(5,2),
+    new_share DECIMAL(5,2) NOT NULL,
+    changed_by VARCHAR(255) NOT NULL,
+    changed_at TIMESTAMP DEFAULT NOW(),
+    change_reason TEXT,
+    FOREIGN KEY (share_id) REFERENCES static_shares(share_id)
+)
+2025-06-30 23:19:15,265 - sqlalchemy.engine.Engine - INFO - [generated in 0.00068s] {}
+2025-06-30 23:19:15,346 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:15,387 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:15,388 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table for ignored payment names
+CREATE TABLE IF NOT EXISTS ignored_payment_names (
+    id SERIAL PRIMARY KEY,
+    payment_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (payment_name)
+)
+2025-06-30 23:19:15,389 - sqlalchemy.engine.Engine - INFO - [generated in 0.00066s] {}
+2025-06-30 23:19:15,573 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:15,613 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:15,613 - sqlalchemy.engine.Engine - INFO - 
+
+-- Removed weights_history table since it was referencing a non-existent weights table
+-- CREATE TABLE IF NOT EXISTS weights_history (
+--     history_id SERIAL PRIMARY KEY,
+--     weight_id INTEGER NOT NULL REFERENCES weights(weight_id),
+--     old_weight DECIMAL(5,2),
+--     new_weight DECIMAL(5,2) NOT NULL,
+--     changed_by VARCHAR(255) NOT NULL,
+--     changed_at TIMESTAMP DEFAULT NOW(),
+--     change_reason TEXT,
+--     FOREIGN KEY (weight_id) REFERENCES weights(weight_id)
+-- )
+2025-06-30 23:19:15,614 - sqlalchemy.engine.Engine - INFO - [generated in 0.00081s] {}
+2025-06-30 23:19:15,697 - __main__ - ERROR - Error executing statement: 
+
+-- Removed weights_history table since it was referencing a non-existent weights table
+-- CREATE TABLE IF NOT EXISTS weights_history (
+--     history_id SERIAL PRIMARY KEY,
+--     weight_id INTEGER NOT NULL REFERENCES weights(weight_id),
+--     old_weight DECIMAL(5,2),
+--     new_weight DECIMAL(5,2) NOT NULL,
+--     changed_by VARCHAR(255) NOT NULL,
+--     changed_at TIMESTAMP DEFAULT NOW(),
+--     change_reason TEXT,
+--     FOREIGN KEY (weight_id) REFERENCES weights(weight_id)
+-- )
+2025-06-30 23:19:15,697 - __main__ - ERROR - SQL Error: (psycopg2.ProgrammingError) can't execute an empty query
+[SQL: 
+
+-- Removed weights_history table since it was referencing a non-existent weights table
+-- CREATE TABLE IF NOT EXISTS weights_history (
+--     history_id SERIAL PRIMARY KEY,
+--     weight_id INTEGER NOT NULL REFERENCES weights(weight_id),
+--     old_weight DECIMAL(5,2),
+--     new_weight DECIMAL(5,2) NOT NULL,
+--     changed_by VARCHAR(255) NOT NULL,
+--     changed_at TIMESTAMP DEFAULT NOW(),
+--     change_reason TEXT,
+--     FOREIGN KEY (weight_id) REFERENCES weights(weight_id)
+-- )]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-06-30 23:19:15,698 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table weights
+-- This table stores percentage shares for EACH product on a receipt,
+-- which concern USER with ID=1.
+CREATE TABLE IF NOT EXISTS weights (
+    receipt_id INTEGER NOT NULL REFERENCES receipts(receipt_id),
+    product_id INTEGER NOT NULL REFERENCES products(product_id),
+    weight DECIMAL(5,2) NOT NULL,
+    PRIMARY KEY (receipt_id, product_id)
+)
+2025-06-30 23:19:15,698 - sqlalchemy.engine.Engine - INFO - [generated in 0.00037s] {}
+2025-06-30 23:19:15,741 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:15,776 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:15,777 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table manual_expenses
+CREATE TABLE IF NOT EXISTS manual_expenses (
+    manual_expense_id SERIAL PRIMARY KEY,
+    date DATE NOT NULL,
+    city VARCHAR(255),
+    description TEXT,
+    total_cost DECIMAL(10, 2) NOT NULL,
+    payer_user_id INT NOT NULL REFERENCES users(user_id),
+    share DECIMAL(5,2) NOT NULL, -- percentage for user1
+    counted BOOLEAN DEFAULT TRUE,
+    settled BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+2025-06-30 23:19:15,777 - sqlalchemy.engine.Engine - INFO - [generated in 0.00063s] {}
+2025-06-30 23:19:15,861 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:15,901 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:15,901 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table settlements
+CREATE TABLE IF NOT EXISTS settlements (
+    settlement_id SERIAL PRIMARY KEY,
+    payer_user_id INT NOT NULL REFERENCES users(user_id),
+    debtor_user_id INT NOT NULL REFERENCES users(user_id),
+    receipt_id INT REFERENCES receipts(receipt_id),
+    manual_expense_id INT REFERENCES manual_expenses(manual_expense_id),
+    amount DECIMAL(10,2) NOT NULL,
+    settled BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CHECK (payer_user_id != debtor_user_id)
+)
+2025-06-30 23:19:15,901 - sqlalchemy.engine.Engine - INFO - [generated in 0.00097s] {}
+2025-06-30 23:19:15,978 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:16,019 - __main__ - INFO - Running database migrations...
+2025-06-30 23:19:16,174 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:16,175 - sqlalchemy.engine.Engine - INFO - 
+                DO $$
+                BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1 
+                        FROM information_schema.columns 
+                        WHERE table_name = 'manual_expenses' 
+                        AND column_name = 'share'
+                    ) THEN
+                        ALTER TABLE manual_expenses 
+                        ADD COLUMN share DECIMAL(5,2) NOT NULL DEFAULT 50.00;
+                        RAISE NOTICE 'Added share column to manual_expenses';
+                    END IF;
+                END $$;
+            
+                IF NOT EXISTS (
+                    SELECT 1 
+                    FROM information_schema.columns 
+                    WHERE table_name = 'manual_expenses' 
+                    AND column_name = 'category'
+                ) THEN
+                    ALTER TABLE manual_expenses 
+                    ADD COLUMN category VARCHAR(100);
+                    RAISE NOTICE 'Added category column to manual_expenses';
+                END IF;
+            
+2025-06-30 23:19:16,175 - sqlalchemy.engine.Engine - INFO - [generated in 0.00040s] {}
+2025-06-30 23:19:16,255 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-06-30 23:19:16,302 - app.db.migrations - ERROR - Error ensuring manual_expenses columns: (psycopg2.errors.SyntaxError) syntax error at or near "IF"
+LINE 16:                 IF NOT EXISTS (
+                         ^
+
+[SQL: 
+                DO $$
+                BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1 
+                        FROM information_schema.columns 
+                        WHERE table_name = 'manual_expenses' 
+                        AND column_name = 'share'
+                    ) THEN
+                        ALTER TABLE manual_expenses 
+                        ADD COLUMN share DECIMAL(5,2) NOT NULL DEFAULT 50.00;
+                        RAISE NOTICE 'Added share column to manual_expenses';
+                    END IF;
+                END $$;
+            
+                IF NOT EXISTS (
+                    SELECT 1 
+                    FROM information_schema.columns 
+                    WHERE table_name = 'manual_expenses' 
+                    AND column_name = 'category'
+                ) THEN
+                    ALTER TABLE manual_expenses 
+                    ADD COLUMN category VARCHAR(100);
+                    RAISE NOTICE 'Added category column to manual_expenses';
+                END IF;
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-06-30 23:19:16,303 - app.db.migrations - ERROR - Error running migrations: (psycopg2.errors.SyntaxError) syntax error at or near "IF"
+LINE 16:                 IF NOT EXISTS (
+                         ^
+
+[SQL: 
+                DO $$
+                BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1 
+                        FROM information_schema.columns 
+                        WHERE table_name = 'manual_expenses' 
+                        AND column_name = 'share'
+                    ) THEN
+                        ALTER TABLE manual_expenses 
+                        ADD COLUMN share DECIMAL(5,2) NOT NULL DEFAULT 50.00;
+                        RAISE NOTICE 'Added share column to manual_expenses';
+                    END IF;
+                END $$;
+            
+                IF NOT EXISTS (
+                    SELECT 1 
+                    FROM information_schema.columns 
+                    WHERE table_name = 'manual_expenses' 
+                    AND column_name = 'category'
+                ) THEN
+                    ALTER TABLE manual_expenses 
+                    ADD COLUMN category VARCHAR(100);
+                    RAISE NOTICE 'Added category column to manual_expenses';
+                END IF;
+            ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-06-30 23:19:16,303 - __main__ - ERROR - Error during database initialization: Failed to run database migrations
+2025-06-30 23:19:16,303 - __main__ - ERROR - Database initialization failed
+2025-06-30 23:19:43,494 - __main__ - INFO - Connecting to database at aws-0-eu-central-1.pooler.supabase.com
+2025-06-30 23:19:43,569 - __main__ - INFO - Starting database initialization...
+2025-06-30 23:19:43,569 - __main__ - INFO - Creating database schema...
+2025-06-30 23:19:43,928 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-06-30 23:19:43,929 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-06-30 23:19:44,042 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-06-30 23:19:44,043 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-06-30 23:19:44,131 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-06-30 23:19:44,131 - sqlalchemy.engine.Engine - INFO - [raw sql] {}
+2025-06-30 23:19:44,226 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:44,227 - sqlalchemy.engine.Engine - INFO - -- Create table stores
+CREATE TABLE IF NOT EXISTS stores (
+    store_id SERIAL PRIMARY KEY,
+    store_name VARCHAR(255) NOT NULL,
+    store_city VARCHAR(255),
+    store_address VARCHAR(255) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL,
+    tax_id VARCHAR(20),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (store_name, store_address, postal_code, tax_id)
+)
+2025-06-30 23:19:44,227 - sqlalchemy.engine.Engine - INFO - [generated in 0.00063s] {}
+2025-06-30 23:19:44,300 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:44,341 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:44,342 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table users
+CREATE TABLE IF NOT EXISTS users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+2025-06-30 23:19:44,342 - sqlalchemy.engine.Engine - INFO - [generated in 0.00067s] {}
+2025-06-30 23:19:44,426 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:44,470 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:44,471 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table user_payments
+-- This table maps "payment_name" from receipt to user_id.
+-- One user can have MULTIPLE payment_names.
+CREATE TABLE IF NOT EXISTS user_payments (
+    user_payment_id SERIAL PRIMARY KEY, -- New primary key for record uniqueness
+    user_id INT NOT NULL REFERENCES users(user_id), -- Foreign key to users table
+    payment_name VARCHAR(255) NOT NULL, -- This is a unique payment name from receipt
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (payment_name) -- Ensures payment name uniqueness to map to only one user_payment_id
+)
+2025-06-30 23:19:44,471 - sqlalchemy.engine.Engine - INFO - [generated in 0.00082s] {}
+2025-06-30 23:19:44,548 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:44,586 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:44,587 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table receipts
+CREATE TABLE IF NOT EXISTS receipts (
+    receipt_id SERIAL PRIMARY KEY,
+    store_id INT NOT NULL REFERENCES stores(store_id),
+    receipt_number VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    final_price DECIMAL(10, 2) NOT NULL,
+    total_discounts DECIMAL(10, 2),
+    -- `payment_name` tutaj bêdzie kluczem obcym do `user_payments`
+    payment_name VARCHAR(255) NOT NULL REFERENCES user_payments(payment_name),
+    counted BOOLEAN DEFAULT FALSE,    -- Czy paragon zosta³ ju¿ podliczony
+    settled BOOLEAN DEFAULT FALSE,    -- Czy paragon zosta³ ju¿ rozliczony
+    finalized BOOLEAN DEFAULT FALSE,  -- Czy paragon zosta³ ju¿ sfinalizowany i nie powinien byæ uwzglêdniany w podsumowaniach
+    not_our_receipt BOOLEAN DEFAULT FALSE, -- Czy paragon nie nale¿y do nas
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    currency CHAR(3) NOT NULL DEFAULT 'PLN',
+    UNIQUE (store_id, receipt_number, date, time) -- Zapewnia unikalnoœæ paragonu
+)
+2025-06-30 23:19:44,587 - sqlalchemy.engine.Engine - INFO - [generated in 0.00077s] {}
+2025-06-30 23:19:44,756 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:44,797 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:44,798 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table products
+CREATE TABLE IF NOT EXISTS products (
+    product_id SERIAL PRIMARY KEY,
+    receipt_id INT NOT NULL REFERENCES receipts(receipt_id),
+    product_name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    tax_type CHAR(1) NOT NULL,
+    updated_at TIMESTAMP DEFAULT NOW(),
+    unit_price_before DECIMAL(10, 2) NOT NULL,
+    total_price_before DECIMAL(10, 2) NOT NULL,
+    unit_discount DECIMAL(10, 2),
+    total_discount DECIMAL(10, 2),
+    unit_after_discount DECIMAL(10, 2),
+    total_after_discount DECIMAL(10, 2) NOT NULL
+)
+2025-06-30 23:19:44,798 - sqlalchemy.engine.Engine - INFO - [generated in 0.00082s] {}
+2025-06-30 23:19:44,883 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:44,929 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:44,932 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table static_shares
+CREATE TABLE IF NOT EXISTS static_shares (
+    share_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    share DECIMAL(5,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (product_name)
+)
+2025-06-30 23:19:44,933 - sqlalchemy.engine.Engine - INFO - [generated in 0.00301s] {}
+2025-06-30 23:19:45,045 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:45,083 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:45,084 - sqlalchemy.engine.Engine - INFO - 
+
+CREATE TABLE IF NOT EXISTS static_shares_history (
+    history_id SERIAL PRIMARY KEY,
+    share_id INTEGER NOT NULL REFERENCES static_shares(share_id),
+    old_share DECIMAL(5,2),
+    new_share DECIMAL(5,2) NOT NULL,
+    changed_by VARCHAR(255) NOT NULL,
+    changed_at TIMESTAMP DEFAULT NOW(),
+    change_reason TEXT,
+    FOREIGN KEY (share_id) REFERENCES static_shares(share_id)
+)
+2025-06-30 23:19:45,084 - sqlalchemy.engine.Engine - INFO - [generated in 0.00068s] {}
+2025-06-30 23:19:45,159 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:45,195 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:45,195 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table for ignored payment names
+CREATE TABLE IF NOT EXISTS ignored_payment_names (
+    id SERIAL PRIMARY KEY,
+    payment_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (payment_name)
+)
+2025-06-30 23:19:45,195 - sqlalchemy.engine.Engine - INFO - [generated in 0.00052s] {}
+2025-06-30 23:19:45,287 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:45,328 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:45,328 - sqlalchemy.engine.Engine - INFO - 
+
+-- Removed weights_history table since it was referencing a non-existent weights table
+-- CREATE TABLE IF NOT EXISTS weights_history (
+--     history_id SERIAL PRIMARY KEY,
+--     weight_id INTEGER NOT NULL REFERENCES weights(weight_id),
+--     old_weight DECIMAL(5,2),
+--     new_weight DECIMAL(5,2) NOT NULL,
+--     changed_by VARCHAR(255) NOT NULL,
+--     changed_at TIMESTAMP DEFAULT NOW(),
+--     change_reason TEXT,
+--     FOREIGN KEY (weight_id) REFERENCES weights(weight_id)
+-- )
+2025-06-30 23:19:45,328 - sqlalchemy.engine.Engine - INFO - [generated in 0.00079s] {}
+2025-06-30 23:19:45,406 - __main__ - ERROR - Error executing statement: 
+
+-- Removed weights_history table since it was referencing a non-existent weights table
+-- CREATE TABLE IF NOT EXISTS weights_history (
+--     history_id SERIAL PRIMARY KEY,
+--     weight_id INTEGER NOT NULL REFERENCES weights(weight_id),
+--     old_weight DECIMAL(5,2),
+--     new_weight DECIMAL(5,2) NOT NULL,
+--     changed_by VARCHAR(255) NOT NULL,
+--     changed_at TIMESTAMP DEFAULT NOW(),
+--     change_reason TEXT,
+--     FOREIGN KEY (weight_id) REFERENCES weights(weight_id)
+-- )
+2025-06-30 23:19:45,406 - __main__ - ERROR - SQL Error: (psycopg2.ProgrammingError) can't execute an empty query
+[SQL: 
+
+-- Removed weights_history table since it was referencing a non-existent weights table
+-- CREATE TABLE IF NOT EXISTS weights_history (
+--     history_id SERIAL PRIMARY KEY,
+--     weight_id INTEGER NOT NULL REFERENCES weights(weight_id),
+--     old_weight DECIMAL(5,2),
+--     new_weight DECIMAL(5,2) NOT NULL,
+--     changed_by VARCHAR(255) NOT NULL,
+--     changed_at TIMESTAMP DEFAULT NOW(),
+--     change_reason TEXT,
+--     FOREIGN KEY (weight_id) REFERENCES weights(weight_id)
+-- )]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-06-30 23:19:45,407 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table weights
+-- This table stores percentage shares for EACH product on a receipt,
+-- which concern USER with ID=1.
+CREATE TABLE IF NOT EXISTS weights (
+    receipt_id INTEGER NOT NULL REFERENCES receipts(receipt_id),
+    product_id INTEGER NOT NULL REFERENCES products(product_id),
+    weight DECIMAL(5,2) NOT NULL,
+    PRIMARY KEY (receipt_id, product_id)
+)
+2025-06-30 23:19:45,407 - sqlalchemy.engine.Engine - INFO - [generated in 0.00025s] {}
+2025-06-30 23:19:45,453 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:45,498 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:45,499 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table manual_expenses
+CREATE TABLE IF NOT EXISTS manual_expenses (
+    manual_expense_id SERIAL PRIMARY KEY,
+    date DATE NOT NULL,
+    city VARCHAR(255),
+    description TEXT,
+    total_cost DECIMAL(10, 2) NOT NULL,
+    payer_user_id INT NOT NULL REFERENCES users(user_id),
+    share DECIMAL(5,2) NOT NULL, -- percentage for user1
+    counted BOOLEAN DEFAULT TRUE,
+    settled BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+2025-06-30 23:19:45,499 - sqlalchemy.engine.Engine - INFO - [generated in 0.00074s] {}
+2025-06-30 23:19:45,567 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:45,611 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:45,611 - sqlalchemy.engine.Engine - INFO - 
+
+-- Create table settlements
+CREATE TABLE IF NOT EXISTS settlements (
+    settlement_id SERIAL PRIMARY KEY,
+    payer_user_id INT NOT NULL REFERENCES users(user_id),
+    debtor_user_id INT NOT NULL REFERENCES users(user_id),
+    receipt_id INT REFERENCES receipts(receipt_id),
+    manual_expense_id INT REFERENCES manual_expenses(manual_expense_id),
+    amount DECIMAL(10,2) NOT NULL,
+    settled BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    CHECK (payer_user_id != debtor_user_id)
+)
+2025-06-30 23:19:45,611 - sqlalchemy.engine.Engine - INFO - [generated in 0.00075s] {}
+2025-06-30 23:19:45,732 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:45,771 - __main__ - INFO - Running database migrations...
+2025-06-30 23:19:45,971 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-06-30 23:19:45,972 - sqlalchemy.engine.Engine - INFO - 
+                DO $$
+                BEGIN
+                    -- Check and add share column if it doesn't exist
+                    IF NOT EXISTS (
+                        SELECT 1 
+                        FROM information_schema.columns 
+                        WHERE table_name = 'manual_expenses' 
+                        AND column_name = 'share'
+                    ) THEN
+                        ALTER TABLE manual_expenses 
+                        ADD COLUMN share DECIMAL(5,2) NOT NULL DEFAULT 50.00;
+                        RAISE NOTICE 'Added share column to manual_expenses';
+                    END IF;
+                    
+                    -- Check and add category column if it doesn't exist
+                    IF NOT EXISTS (
+                        SELECT 1 
+                        FROM information_schema.columns 
+                        WHERE table_name = 'manual_expenses' 
+                        AND column_name = 'category'
+                    ) THEN
+                        ALTER TABLE manual_expenses 
+                        ADD COLUMN category VARCHAR(100);
+                        RAISE NOTICE 'Added category column to manual_expenses';
+                    END IF;
+                END $$;
+            
+2025-06-30 23:19:45,972 - sqlalchemy.engine.Engine - INFO - [generated in 0.00043s] {}
+2025-06-30 23:19:46,064 - sqlalchemy.engine.Engine - INFO - COMMIT
+2025-06-30 23:19:46,107 - app.db.migrations - INFO - Verified manual_expenses table structure
+2025-06-30 23:19:46,107 - app.db.migrations - INFO - Database migrations completed successfully
+2025-06-30 23:19:46,107 - __main__ - INFO - Database initialization completed successfully
+2025-06-30 23:19:46,107 - __main__ - INFO - Database initialization completed successfully

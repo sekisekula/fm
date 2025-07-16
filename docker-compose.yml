@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: ${DB_USER_LOCAL:-postgres} # Default value if DB_USER_LOCAL is not set
+      POSTGRES_PASSWORD: ${DB_PASSWORD_LOCAL:-postgres} # Default value
+      POSTGRES_DB: ${DB_NAME_LOCAL:-postgres} # Default value
+    ports:
+      - "5432:5432"
+  app:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-postgres}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - NON_INTERACTIVE=true
+      - DB_HOST_INTERNAL=db  # Using service name for internal communication
+      - DB_PORT_INTERNAL=5432
+      - APP_MODE=${APP_MODE:-api}  # Default to API mode for container startup
+
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    # Remove the hardcoded command to use the Dockerfile's CMD
+
+volumes:
+  db_data:

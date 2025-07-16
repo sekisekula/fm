@@ -1,0 +1,17 @@
+FROM python:3.11-slim
+
+# Tworzymy katalog roboczy, ale nie wchodzimy jeszcze do app/
+WORKDIR /app
+
+# Instalujemy zależności
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+# Kopiujemy cały folder app jako pakiet (czyli zawiera main.py itd.)
+COPY .app/ .app/
+
+# Najważniejsze: ustawiamy PYTHONPATH tak, żeby /app było w ścieżce
+ENV PYTHONPATH=/app
+
+# Upewniamy się, że main.py znajduje się w app/
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

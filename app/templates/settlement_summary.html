@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Aktualne rozliczenie</title>
+    <style>
+        .settlement-summary { background: #f8f9fa; border-radius: 10px; padding: 18px 24px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .settlement-summary h2 { margin-top: 0; color: #007bff; }
+        .summary-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+        .summary-table th, .summary-table td { border: 1px solid #ddd; padding: 8px 12px; text-align: center; }
+        .summary-table th { background: #f0f0f0; }
+        .settlement-text { font-size: 1.2em; font-weight: bold; color: #28a745; margin-bottom: 18px; }
+        .section-title { font-size: 1.1em; margin: 18px 0 8px 0; color: #333; }
+        .item-list { margin-bottom: 12px; }
+        .item-list table { width: 100%; border-collapse: collapse; }
+        .item-list th, .item-list td { border: 1px solid #eee; padding: 6px 10px; text-align: left; }
+        .item-list th { background: #f8f9fa; }
+        @media (max-width: 700px) { .settlement-summary { padding: 8px; } .summary-table th, .summary-table td { padding: 4px; } }
+    </style>
+</head>
+<body>
+<div class="settlement-summary">
+    <h2>Aktualne rozliczenie</h2>
+    <div class="settlement-text" id="settlementText"></div>
+    <table class="summary-table" id="summaryTable">
+        <thead>
+            <tr><th>Użytkownik</th><th>Wyłożył łącznie</th><th>Powinien zapłacić</th><th>Netto</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div style="margin: 24px 0 12px 0; text-align: center;">
+        <button id="finalizeSettlementBtn" style="background:#28a745;color:#fff;padding:12px 28px;font-size:1.1em;border:none;border-radius:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            Sfinalizuj rozliczenie
+        </button>
+        <div style="margin-top:8px;color:#555;font-size:0.98em;">Kliknij gdy osoby wykonały między sobą rozliczenie/przelew itp.</div>
+    </div>
+    <div class="section-title">Nierozliczone paragony</div>
+    <div class="item-list">
+        <table id="receiptsTable">
+            <thead><tr><th>Data</th><th>Sklep</th><th>Kwota</th><th>Kto płacił</th><th>Podział</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="section-title">Nierozliczone wydatki manualne</div>
+    <div class="item-list">
+        <table id="manualTable">
+            <thead><tr><th>Data</th><th>Opis</th><th>Kwota</th><th>Kto płacił</th><th>Podział</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<!-- Modal potwierdzenia -->
+<div id="finalizeModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;padding:32px 28px;border-radius:12px;max-width:95vw;box-shadow:0 4px 24px rgba(0,0,0,0.18);text-align:center;">
+        <div style="font-size:1.15em;margin-bottom:18px;">Czy na pewno chcesz sfinalizować rozliczenie za wszystkie powyższe pozycje?</div>
+        <button id="finalizeYesBtn" style="background:#28a745;color:#fff;padding:10px 24px;margin:0 12px;border:none;border-radius:6px;font-size:1em;">Tak</button>
+        <button id="finalizeNoBtn" style="background:#dc3545;color:#fff;padding:10px 24px;margin:0 12px;border:none;border-radius:6px;font-size:1em;">Nie</button>
+    </div>
+</div>
+<script>
+async function loadSettlementSummary() {
+    const res = await fetch('/api/settlement');
+    const data = await res.json();
+    // Podsumowanie tekstowe
+    document.getElementById('settlementText').textContent = data.settlement_text;
+    // Tabela podsumowania
+    const tbody = document.querySelector('#summaryTable tbody');
+    tbody.innerHTML = '';
+    (data.summary_table || []).forEach(row => {
+        tbody.innerHTML += `<tr><td>${row.user_name}</td><td>${row.actually_paid.toFixed(2)} PLN</td><td>${row.should_pay.toFixed(2)} PLN</td><td>${row.net.toFixed(2)} PLN</td></tr>`;
+    });
+    // Paragony
+    const rbody = document.querySelector('#receiptsTable tbody');
+    rbody.innerHTML = '';
+    (data.receipts || []).forEach(r => {
+        let shares = Object.entries(r.shares).map(([uid, val]) => `${data.users.find(u=>u.user_id==uid)?.user_name||uid}: ${val.toFixed(2)} PLN`).join(', ');
+        rbody.innerHTML += `<tr><td>${r.date}</td><td>${r.store_name||''}</td><td>${r.final_price.toFixed(2)} PLN</td><td>${r.payer_name}</td><td>${shares}</td></tr>`;
+    });
+    // Manualne
+    const mbody = document.querySelector('#manualTable tbody');
+    mbody.innerHTML = '';
+    (data.manual_expenses || []).forEach(m => {
+        let shares = Object.entries(m.shares).map(([uid, val]) => `${data.users.find(u=>u.user_id==uid)?.user_name||uid}: ${val.toFixed(2)} PLN`).join(', ');
+        mbody.innerHTML += `<tr><td>${m.date}</td><td>${m.description||''}</td><td>${m.total_cost.toFixed(2)} PLN</td><td>${m.payer_name}</td><td>${shares}</td></tr>`;
+    });
+}
+window.addEventListener('DOMContentLoaded', loadSettlementSummary);
+document.getElementById('finalizeSettlementBtn').onclick = function() {
+    document.getElementById('finalizeModal').style.display = 'flex';
+};
+document.getElementById('finalizeNoBtn').onclick = function() {
+    document.getElementById('finalizeModal').style.display = 'none';
+};
+document.getElementById('finalizeYesBtn').onclick = async function() {
+    document.getElementById('finalizeModal').style.display = 'none';
+    // Pobierz dane do rozliczenia z summary_table
+    try {
+        const res = await fetch('/api/settlement');
+        const data = await res.json();
+        const summary = data.summary_table || [];
+        if (summary.length < 2) {
+            alert('Brak wystarczających danych do rozliczenia.');
+            return;
+        }
+        // Znajdź osobę z największym net > 0 (payer) i najmniejszym net < 0 (debtor)
+        let payer = null, debtor = null;
+        summary.forEach(row => {
+            if (payer === null || row.net > payer.net) payer = row;
+            if (debtor === null || row.net < debtor.net) debtor = row;
+        });
+        if (!payer || !debtor || payer.net <= 0 || debtor.net >= 0) {
+            alert('Brak osób do rozliczenia.');
+            return;
+        }
+        const amount = Math.min(Math.abs(payer.net), Math.abs(debtor.net));
+        // Wyślij żądanie POST z wymaganymi danymi
+        const payload = {
+            payer_user_id: payer.user_id,
+            debtor_user_id: debtor.user_id,
+            amount: amount
+        };
+        const resp = await fetch('/api/finalize-settlement', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        if (resp.ok) {
+            alert('Rozliczenie zostało sfinalizowane!');
+            window.location.reload();
+        } else {
+            alert('Błąd podczas finalizacji rozliczenia.');
+        }
+    } catch (e) {
+        alert('Błąd sieci: ' + e.message);
+    }
+};
+</script>
+<h2 style="margin-top:38px;">Poprzednie rozliczenia</h2>
+<div id="historySettlements"></div>
+<!-- Modal szczegółów historycznego rozliczenia -->
+<div id="historySettlementModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;padding:32px 28px;border-radius:12px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 4px 24px rgba(0,0,0,0.18);text-align:left;">
+        <div style="font-size:1.15em;margin-bottom:18px;font-weight:bold;">Szczegóły rozliczenia</div>
+        <div id="historySettlementDetails"></div>
+        <div style="text-align:right;margin-top:18px;"><button onclick="closeHistorySettlementModal()" style="background:#6c757d;color:#fff;padding:8px 18px;border:none;border-radius:6px;font-size:1em;">Zamknij</button></div>
+    </div>
+</div>
+<script>
+// Załaduj poprzednie rozliczenia
+async function loadHistorySettlements() {
+    const container = document.getElementById('historySettlements');
+    container.innerHTML = '<div style="padding:24px;text-align:center;opacity:0.7;">Ładowanie...</div>';
+    try {
+        const resp = await fetch('/api/settlements');
+        let data = await resp.json();
+        // USUŃ 'Other'
+        data = data.filter(s => s.payer_name !== 'Other' && s.debtor_name !== 'Other');
+        if (!data.length) {
+            container.innerHTML = '<div style="padding:24px;text-align:center;opacity:0.7;">Brak poprzednich rozliczeń.</div>';
+            return;
+        }
+        container.innerHTML = data.map(s => `
+            <div class="settlement-item" style="cursor:pointer;" onclick="showHistorySettlementDetails(${s.settlement_id})">
+                <b>${s.created_at}</b> &mdash; <strong>${s.debtor_name}</strong> → <strong>${s.payer_name}</strong>: <span style='color:#007bff;'>${s.amount.toFixed(2)} PLN</span>
+            </div>
+        `).join('');
+    } catch (e) {
+        container.innerHTML = '<div style="padding:24px;text-align:center;color:#dc3545;">Błąd ładowania historii.</div>';
+    }
+}
+window.showHistorySettlementDetails = async function(settlementId) {
+    const modal = document.getElementById('historySettlementModal');
+    const detailsDiv = document.getElementById('historySettlementDetails');
+    detailsDiv.innerHTML = '<div style="padding:24px;text-align:center;opacity:0.7;">Ładowanie szczegółów...</div>';
+    modal.style.display = 'flex';
+    try {
+        const resp = await fetch(`/api/settlement-details/${settlementId}`);
+        const data = await resp.json();
+        let html = '';
+        // Paragony
+        if (data.receipts && data.receipts.length) {
+            html += `<h4>Paragony:</h4><table class='details-table'><thead><tr><th>Data</th><th>Sklep</th><th>Kwota</th><th>Wykładał</th><th>Do oddania</th></tr></thead><tbody>`;
+            data.receipts.forEach(r => {
+                let payerName = r.payer_name || '-';
+                let debtText = '-';
+                if (r.shares) {
+                    // Szukamy największego udziału (dłużnika), ale nie płacącego
+                    let maxOwed = 0;
+                    let maxUser = null;
+                    for (var user in r.shares) {
+                        if (!r.shares.hasOwnProperty(user)) continue;
+                        var amount = r.shares[user];
+                        if (user !== payerName && amount > maxOwed) {
+                            maxOwed = amount;
+                            maxUser = user;
+                        }
+                    }
+                    if (maxUser && maxOwed > 0) {
+                        debtText = `<span class='debtor'>${maxUser}</span> <b>${maxOwed.toFixed(2)} PLN</b>`;
+                    }
+                }
+                html += `<tr><td>${r.date}</td><td>${r.store_name}</td><td>${r.final_price ? r.final_price.toFixed(2) : '-'} PLN</td><td>${payerName}</td><td>${debtText}</td></tr>`;
+            });
+            html += '</tbody></table>';
+        }
+        // Wydatki manualne
+        if (data.manual_expenses && data.manual_expenses.length) {
+            html += `<h4>Inne wydatki:</h4><table class='details-table'><thead><tr><th>Data</th><th>Opis</th><th>Kategoria</th><th>Kwota</th><th>Do oddania</th></tr></thead><tbody>`;
+            data.manual_expenses.forEach(m => {
+                // Ustal kto jest dłużnikiem i ile ma oddać
+                let debtText = '-';
+                // Założenie: Michał = 1, Werka = 2
+                if (m.user1_share > 0 && m.user2_share > 0) {
+                    // Obie osoby mają udział, dłużnikiem jest ta, która nie wykładała
+                    if (m.user1_share < m.user2_share) {
+                        debtText = `Michał ${(m.user1_share).toFixed(2)} PLN`;
+                    } else {
+                        debtText = `Werka ${(m.user2_share).toFixed(2)} PLN`;
+                    }
+                } else if (m.user1_share > 0) {
+                    debtText = `Michał ${(m.user1_share).toFixed(2)} PLN`;
+                } else if (m.user2_share > 0) {
+                    debtText = `Werka ${(m.user2_share).toFixed(2)} PLN`;
+                }
+                html += `<tr><td>${m.date}</td><td>${m.description}</td><td>${m.category}</td><td>${m.total_cost ? m.total_cost.toFixed(2) : '-'} PLN</td><td>${debtText}</td></tr>`;
+            });
+            html += '</tbody></table>';
+        }
+        const settlement = data.settlement; // Assuming data.settlement contains the full settlement object
+        let headerLine = '';
+        if (settlement) {
+            headerLine = `<div style='font-size:1.15em;font-weight:bold;margin-bottom:12px;'>${settlement.created_at} — ${settlement.debtor_name} → ${settlement.payer_name}: ${settlement.amount.toFixed(2)} PLN</div>`;
+        }
+        detailsDiv.innerHTML = headerLine + html;
+    } catch (e) {
+        detailsDiv.innerHTML = '<div style="padding:24px;text-align:center;color:#dc3545;">Błąd ładowania szczegółów.</div>';
+    }
+};
+function closeHistorySettlementModal() {
+    document.getElementById('historySettlementModal').style.display = 'none';
+}
+// Załaduj historię po załadowaniu strony
+document.addEventListener('DOMContentLoaded', loadHistorySettlements);
+</script>
+</body>
+</html> 

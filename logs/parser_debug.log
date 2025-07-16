@@ -1,0 +1,638 @@
+2025-07-08 19:55:59,461 INFO === Parser module imported: log file creation test ===
+2025-07-08 19:58:42,840 INFO Starting to process file: paragon_2502284602127565.json
+2025-07-08 19:58:42,844 INFO Using receipt number: 144
+2025-07-08 19:58:43,854 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:44,041 INFO Attempting to insert receipt with number: 144
+2025-07-08 19:58:44,111 INFO [ADD] Receipt ID: 44 for number '144' - Successfully added.
+2025-07-08 19:58:44,195 INFO [SUCCESS] Successfully processed and moved receipt paragon_2502284602127565.json
+2025-07-08 19:58:44,199 INFO Starting to process file: paragon_2503015770097565.json
+2025-07-08 19:58:44,203 INFO Using receipt number: 22
+2025-07-08 19:58:44,616 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:44,791 INFO Attempting to insert receipt with number: 22
+2025-07-08 19:58:44,858 INFO [ADD] Receipt ID: 45 for number '22' - Successfully added.
+2025-07-08 19:58:44,929 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503015770097565.json
+2025-07-08 19:58:44,932 INFO Starting to process file: paragon_2503049841157565.json
+2025-07-08 19:58:44,936 INFO Using receipt number: 256
+2025-07-08 19:58:45,357 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:45,522 INFO Attempting to insert receipt with number: 256
+2025-07-08 19:58:45,589 INFO [ADD] Receipt ID: 46 for number '256' - Successfully added.
+2025-07-08 19:58:45,658 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503049841157565.json
+2025-07-08 19:58:45,663 INFO Starting to process file: paragon_2503079246153223.json
+2025-07-08 19:58:45,666 INFO Using receipt number: 152
+2025-07-08 19:58:46,071 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 19:58:46,250 INFO Attempting to insert receipt with number: 152
+2025-07-08 19:58:46,350 INFO [ADD] Receipt ID: 47 for number '152' - Successfully added.
+2025-07-08 19:58:46,422 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503079246153223.json
+2025-07-08 19:58:50,842 INFO === Parser module imported: log file creation test ===
+2025-07-08 19:58:50,852 INFO Starting to process file: 1.json
+2025-07-08 19:58:50,854 INFO Using receipt number: 108
+2025-07-08 19:58:51,259 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:51,421 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:38:13, Final Price: 38.55
+2025-07-08 19:58:51,455 INFO Starting to process file: paragon_2502249950087565.json
+2025-07-08 19:58:51,460 INFO Using receipt number: 223
+2025-07-08 19:58:51,867 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:52,047 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-24, Time: 21:17:21, Final Price: 73.37
+2025-07-08 19:58:52,081 INFO Starting to process file: paragon_2502263221163213.json
+2025-07-08 19:58:52,086 INFO Using receipt number: 307
+2025-07-08 19:58:52,497 INFO Store ID: 16 for 'BIEDRONKA'
+2025-07-08 19:58:52,654 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-26, Time: 18:40:40, Final Price: 25.55
+2025-07-08 19:58:52,696 INFO Starting to process file: paragon_2502271370117565.json
+2025-07-08 19:58:52,701 INFO Using receipt number: 132
+2025-07-08 19:58:53,096 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:53,281 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-27, Time: 15:35:26, Final Price: 11.37
+2025-07-08 19:58:53,313 INFO Starting to process file: paragon_2502278508157565.json
+2025-07-08 19:58:53,318 INFO Using receipt number: 168
+2025-07-08 19:58:53,710 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:53,891 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-27, Time: 15:33:29, Final Price: 36.93
+2025-07-08 19:58:53,923 INFO Starting to process file: paragon_2502284602127565.json
+2025-07-08 19:58:53,928 INFO Using receipt number: 144
+2025-07-08 19:58:54,322 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:54,522 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-28, Time: 14:04:10, Final Price: 54.91
+2025-07-08 19:58:54,556 INFO Starting to process file: paragon_2503015770097565.json
+2025-07-08 19:58:54,562 INFO Using receipt number: 22
+2025-07-08 19:58:54,960 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:55,116 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-01, Time: 09:04:24, Final Price: 22.98
+2025-07-08 19:58:55,148 INFO Starting to process file: paragon_2503049841157565.json
+2025-07-08 19:58:55,154 INFO Using receipt number: 256
+2025-07-08 19:58:55,538 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:55,706 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-04, Time: 19:43:54, Final Price: 80.64
+2025-07-08 19:58:55,739 INFO Starting to process file: paragon_2503079246153223.json
+2025-07-08 19:58:55,745 INFO Using receipt number: 152
+2025-07-08 19:58:56,147 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 19:58:56,314 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-07, Time: 19:39:31, Final Price: 44.64
+2025-07-08 19:58:56,350 INFO Starting to process file: receipt (1).json
+2025-07-08 19:58:56,355 INFO Using receipt number: 167
+2025-07-08 19:58:56,745 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 19:58:56,904 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-14, Time: 17:54:25, Final Price: 19.77
+2025-07-08 20:04:20,164 INFO Starting to process file: paragon_2504243989013223.json
+2025-07-08 20:04:20,167 INFO Using receipt number: 255
+2025-07-08 20:04:21,166 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:04:21,306 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:04:21,405 INFO Attempting to insert receipt with number: 255
+2025-07-08 20:04:21,696 INFO [ADD] Receipt ID: 48 for number '255' - Successfully added.
+2025-07-08 20:04:21,876 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504243989013223.json
+2025-07-08 20:06:32,966 INFO Starting to process file: paragon_2504222155157565.json
+2025-07-08 20:06:32,969 INFO Using receipt number: 72
+2025-07-08 20:06:33,816 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:06:34,183 INFO Attempting to insert receipt with number: 72
+2025-07-08 20:06:34,363 INFO [ADD] Receipt ID: 49 for number '72' - Successfully added.
+2025-07-08 20:06:34,442 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504222155157565.json
+2025-07-08 20:06:34,446 INFO Starting to process file: paragon_2504235827147565.json
+2025-07-08 20:06:34,449 INFO Using receipt number: 205
+2025-07-08 20:06:34,871 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:06:35,042 INFO Attempting to insert receipt with number: 205
+2025-07-08 20:06:35,123 INFO [ADD] Receipt ID: 50 for number '205' - Successfully added.
+2025-07-08 20:06:35,192 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504235827147565.json
+2025-07-08 20:06:35,197 INFO Starting to process file: paragon_2504243989013223.json
+2025-07-08 20:06:35,201 INFO Using receipt number: 255
+2025-07-08 20:06:35,607 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:06:35,676 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:06:35,778 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 10:15:59, Final Price: 107.89
+2025-07-08 20:06:35,815 INFO Starting to process file: paragon_2504245764137565.json
+2025-07-08 20:06:35,818 INFO Using receipt number: 28
+2025-07-08 20:06:36,239 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:06:36,408 INFO Attempting to insert receipt with number: 28
+2025-07-08 20:06:36,488 INFO [ADD] Receipt ID: 51 for number '28' - Successfully added.
+2025-07-08 20:06:36,557 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504245764137565.json
+2025-07-08 20:06:36,561 INFO Starting to process file: paragon_2504265083013223.json
+2025-07-08 20:06:36,565 INFO Using receipt number: 348
+2025-07-08 20:06:37,010 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:06:37,078 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:06:37,178 INFO Attempting to insert receipt with number: 348
+2025-07-08 20:06:37,245 INFO [ADD] Receipt ID: 52 for number '348' - Successfully added.
+2025-07-08 20:06:37,322 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504265083013223.json
+2025-07-08 20:06:37,327 INFO Starting to process file: receipt (1).json
+2025-07-08 20:06:37,330 INFO Using receipt number: 167
+2025-07-08 20:06:37,752 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:06:37,957 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-14, Time: 17:54:25, Final Price: 19.77
+2025-07-08 20:06:37,995 INFO Starting to process file: receipt.json
+2025-07-08 20:06:37,998 INFO Using receipt number: 109
+2025-07-08 20:06:38,407 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:06:38,596 INFO Attempting to insert receipt with number: 109
+2025-07-08 20:06:38,672 INFO [ADD] Receipt ID: 53 for number '109' - Successfully added.
+2025-07-08 20:06:38,741 INFO [SUCCESS] Successfully processed and moved receipt receipt.json
+2025-07-08 20:06:38,745 INFO Starting to process file: receipt1.json
+2025-07-08 20:06:38,749 INFO Using receipt number: 109
+2025-07-08 20:06:39,163 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:06:39,329 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:07:17,916 INFO Starting to process file: paragon_2504222155157565.json
+2025-07-08 20:07:17,920 INFO Using receipt number: 72
+2025-07-08 20:07:18,378 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:18,574 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-22, Time: 12:59:06, Final Price: 299.21
+2025-07-08 20:07:18,620 INFO Starting to process file: paragon_2504235827147565.json
+2025-07-08 20:07:18,625 INFO Using receipt number: 205
+2025-07-08 20:07:19,066 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:19,271 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-23, Time: 17:44:09, Final Price: 119.71
+2025-07-08 20:07:19,320 INFO Starting to process file: paragon_2504243989013223.json
+2025-07-08 20:07:19,323 INFO Using receipt number: 255
+2025-07-08 20:07:19,736 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:07:19,818 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:07:19,918 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 10:15:59, Final Price: 107.89
+2025-07-08 20:07:19,956 INFO Starting to process file: paragon_2504245764137565.json
+2025-07-08 20:07:19,960 INFO Using receipt number: 28
+2025-07-08 20:07:20,395 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:20,564 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 08:42:19, Final Price: 51.1
+2025-07-08 20:07:20,611 INFO Starting to process file: paragon_2504265083013223.json
+2025-07-08 20:07:20,615 INFO Using receipt number: 348
+2025-07-08 20:07:21,064 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:07:21,141 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:07:21,243 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-26, Time: 16:24:22, Final Price: 115.08
+2025-07-08 20:07:21,280 INFO Starting to process file: receipt (1).json
+2025-07-08 20:07:21,284 INFO Using receipt number: 167
+2025-07-08 20:07:21,703 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:21,884 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-14, Time: 17:54:25, Final Price: 19.77
+2025-07-08 20:07:21,922 INFO Starting to process file: receipt.json
+2025-07-08 20:07:21,928 INFO Using receipt number: 109
+2025-07-08 20:07:22,376 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:22,546 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:07:22,587 INFO Starting to process file: receipt1.json
+2025-07-08 20:07:22,590 INFO Using receipt number: 109
+2025-07-08 20:07:22,999 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:23,193 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:07:23,235 INFO Starting to process file: paragon_2504222155157565.json
+2025-07-08 20:07:23,238 INFO Using receipt number: 72
+2025-07-08 20:07:23,647 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:23,825 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-22, Time: 12:59:06, Final Price: 299.21
+2025-07-08 20:07:23,863 INFO Starting to process file: paragon_2504235827147565.json
+2025-07-08 20:07:23,866 INFO Using receipt number: 205
+2025-07-08 20:07:24,274 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:24,442 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-23, Time: 17:44:09, Final Price: 119.71
+2025-07-08 20:07:24,485 INFO Starting to process file: paragon_2504243989013223.json
+2025-07-08 20:07:24,488 INFO Using receipt number: 255
+2025-07-08 20:07:24,934 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:07:25,003 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:07:25,103 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 10:15:59, Final Price: 107.89
+2025-07-08 20:07:25,141 INFO Starting to process file: paragon_2504245764137565.json
+2025-07-08 20:07:25,145 INFO Using receipt number: 28
+2025-07-08 20:07:25,546 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:25,734 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 08:42:19, Final Price: 51.1
+2025-07-08 20:07:25,775 INFO Starting to process file: paragon_2504265083013223.json
+2025-07-08 20:07:25,778 INFO Using receipt number: 348
+2025-07-08 20:07:26,194 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:07:26,311 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:07:26,411 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-26, Time: 16:24:22, Final Price: 115.08
+2025-07-08 20:07:26,448 INFO Starting to process file: receipt (1).json
+2025-07-08 20:07:26,450 INFO Using receipt number: 167
+2025-07-08 20:07:26,870 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:27,038 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-14, Time: 17:54:25, Final Price: 19.77
+2025-07-08 20:07:27,075 INFO Starting to process file: receipt.json
+2025-07-08 20:07:27,078 INFO Using receipt number: 109
+2025-07-08 20:07:27,521 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:27,753 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:07:27,793 INFO Starting to process file: receipt1.json
+2025-07-08 20:07:27,796 INFO Using receipt number: 109
+2025-07-08 20:07:28,239 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:07:28,415 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:13:38,550 INFO === Parser module imported: log file creation test ===
+2025-07-08 20:15:30,940 INFO === Parser module imported: log file creation test ===
+2025-07-08 20:15:30,951 INFO Starting to process file: 1.json
+2025-07-08 20:15:30,955 INFO Using receipt number: 108
+2025-07-08 20:15:31,384 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:31,557 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:38:13, Final Price: 38.55
+2025-07-08 20:15:31,591 INFO Starting to process file: paragon_2502249950087565.json
+2025-07-08 20:15:31,595 INFO Using receipt number: 223
+2025-07-08 20:15:31,997 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:32,299 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-24, Time: 21:17:21, Final Price: 73.37
+2025-07-08 20:15:32,333 INFO Starting to process file: paragon_2502263221163213.json
+2025-07-08 20:15:32,338 INFO Using receipt number: 307
+2025-07-08 20:15:32,759 INFO Store ID: 16 for 'BIEDRONKA'
+2025-07-08 20:15:32,927 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-26, Time: 18:40:40, Final Price: 25.55
+2025-07-08 20:15:32,961 INFO Starting to process file: paragon_2502271370117565.json
+2025-07-08 20:15:32,966 INFO Using receipt number: 132
+2025-07-08 20:15:33,373 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:33,541 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-27, Time: 15:35:26, Final Price: 11.37
+2025-07-08 20:15:33,574 INFO Starting to process file: paragon_2502278508157565.json
+2025-07-08 20:15:33,579 INFO Using receipt number: 168
+2025-07-08 20:15:34,010 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:34,175 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-27, Time: 15:33:29, Final Price: 36.93
+2025-07-08 20:15:34,209 INFO Starting to process file: paragon_2502284602127565.json
+2025-07-08 20:15:34,214 INFO Using receipt number: 144
+2025-07-08 20:15:34,632 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:34,811 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-28, Time: 14:04:10, Final Price: 54.91
+2025-07-08 20:15:34,848 INFO Starting to process file: paragon_2503015770097565.json
+2025-07-08 20:15:34,852 INFO Using receipt number: 22
+2025-07-08 20:15:35,268 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:35,436 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-01, Time: 09:04:24, Final Price: 22.98
+2025-07-08 20:15:35,470 INFO Starting to process file: paragon_2503049841157565.json
+2025-07-08 20:15:35,474 INFO Using receipt number: 256
+2025-07-08 20:15:35,896 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:36,184 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-04, Time: 19:43:54, Final Price: 80.64
+2025-07-08 20:15:36,218 INFO Starting to process file: paragon_2503079246153223.json
+2025-07-08 20:15:36,223 INFO Using receipt number: 152
+2025-07-08 20:15:36,633 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:15:36,807 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-07, Time: 19:39:31, Final Price: 44.64
+2025-07-08 20:15:36,842 INFO Starting to process file: paragon_2504170195084665.json
+2025-07-08 20:15:36,848 INFO Using receipt number: 179
+2025-07-08 20:15:37,251 INFO Store ID: 164 for 'BIEDRONKA'
+2025-07-08 20:15:37,415 INFO Attempting to insert receipt with number: 179
+2025-07-08 20:15:37,486 INFO [ADD] Receipt ID: 54 for number '179' - Successfully added.
+2025-07-08 20:15:37,582 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504170195084665.json
+2025-07-08 20:15:37,582 INFO Starting to process file: paragon_2504222155157565.json
+2025-07-08 20:15:37,591 INFO Using receipt number: 72
+2025-07-08 20:15:38,030 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:38,202 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-22, Time: 12:59:06, Final Price: 299.21
+2025-07-08 20:15:38,235 INFO Starting to process file: paragon_2504222155157565_20250708_201502_fequ.json
+2025-07-08 20:15:38,240 INFO Using receipt number: 72
+2025-07-08 20:15:38,654 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:38,828 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-22, Time: 12:59:06, Final Price: 299.21
+2025-07-08 20:15:38,861 INFO Starting to process file: paragon_2504235827147565.json
+2025-07-08 20:15:38,866 INFO Using receipt number: 205
+2025-07-08 20:15:39,270 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:39,436 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-23, Time: 17:44:09, Final Price: 119.71
+2025-07-08 20:15:39,469 INFO Starting to process file: paragon_2504235827147565_20250708_201502_x93q.json
+2025-07-08 20:15:39,474 INFO Using receipt number: 205
+2025-07-08 20:15:39,899 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:40,171 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-23, Time: 17:44:09, Final Price: 119.71
+2025-07-08 20:15:40,204 INFO Starting to process file: paragon_2504243989013223.json
+2025-07-08 20:15:40,210 INFO Using receipt number: 255
+2025-07-08 20:15:40,648 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:15:40,715 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:15:40,820 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 10:15:59, Final Price: 107.89
+2025-07-08 20:15:40,858 INFO Starting to process file: paragon_2504243989013223_20250708_201502_5y1i.json
+2025-07-08 20:15:40,863 INFO Using receipt number: 255
+2025-07-08 20:15:41,280 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:15:41,353 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:15:41,463 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 10:15:59, Final Price: 107.89
+2025-07-08 20:15:41,504 INFO Starting to process file: paragon_2504245764137565.json
+2025-07-08 20:15:41,508 INFO Using receipt number: 28
+2025-07-08 20:15:41,924 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:42,092 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 08:42:19, Final Price: 51.1
+2025-07-08 20:15:42,219 INFO Starting to process file: paragon_2504245764137565_20250708_201502_0nuh.json
+2025-07-08 20:15:42,225 INFO Using receipt number: 28
+2025-07-08 20:15:42,642 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:42,822 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 08:42:19, Final Price: 51.1
+2025-07-08 20:15:42,855 INFO Starting to process file: paragon_2504265083013223.json
+2025-07-08 20:15:42,860 INFO Using receipt number: 348
+2025-07-08 20:15:43,258 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:15:43,328 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:15:43,429 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-26, Time: 16:24:22, Final Price: 115.08
+2025-07-08 20:15:43,462 INFO Starting to process file: paragon_2504265083013223_20250708_201502_n06j.json
+2025-07-08 20:15:43,467 INFO Using receipt number: 348
+2025-07-08 20:15:43,874 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:15:43,940 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:15:44,044 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-26, Time: 16:24:22, Final Price: 115.08
+2025-07-08 20:15:44,077 INFO Starting to process file: receipt (1).json
+2025-07-08 20:15:44,082 INFO Using receipt number: 167
+2025-07-08 20:15:44,543 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:44,713 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-14, Time: 17:54:25, Final Price: 19.77
+2025-07-08 20:15:44,748 INFO Starting to process file: receipt (1)_20250708_201502_vkci.json
+2025-07-08 20:15:44,753 INFO Using receipt number: 167
+2025-07-08 20:15:45,172 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:45,356 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-14, Time: 17:54:25, Final Price: 19.77
+2025-07-08 20:15:45,389 INFO Starting to process file: receipt.json
+2025-07-08 20:15:45,394 INFO Using receipt number: 109
+2025-07-08 20:15:45,806 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:45,973 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:15:46,007 INFO Starting to process file: receipt1.json
+2025-07-08 20:15:46,012 INFO Using receipt number: 109
+2025-07-08 20:15:46,468 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:46,655 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:15:46,688 INFO Starting to process file: receipt1_20250708_201502_kmez.json
+2025-07-08 20:15:46,693 INFO Using receipt number: 109
+2025-07-08 20:15:47,111 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:47,289 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:15:47,323 INFO Starting to process file: receipt_20250708_201502_s2mz.json
+2025-07-08 20:15:47,328 INFO Using receipt number: 109
+2025-07-08 20:15:47,766 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:15:47,936 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:20:01,129 INFO === Parser module imported: log file creation test ===
+2025-07-08 20:20:28,722 INFO === Parser module imported: log file creation test ===
+2025-07-08 20:20:28,741 INFO Starting to process file: 1.json
+2025-07-08 20:20:28,745 INFO Using receipt number: 108
+2025-07-08 20:20:29,171 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:29,341 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:38:13, Final Price: 38.55
+2025-07-08 20:20:29,380 INFO Starting to process file: paragon_2502249950087565.json
+2025-07-08 20:20:29,386 INFO Using receipt number: 223
+2025-07-08 20:20:29,900 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:30,078 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-24, Time: 21:17:21, Final Price: 73.37
+2025-07-08 20:20:30,119 INFO Starting to process file: paragon_2502263221163213.json
+2025-07-08 20:20:30,123 INFO Using receipt number: 307
+2025-07-08 20:20:30,532 INFO Store ID: 16 for 'BIEDRONKA'
+2025-07-08 20:20:30,719 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-26, Time: 18:40:40, Final Price: 25.55
+2025-07-08 20:20:30,761 INFO Starting to process file: paragon_2502271370117565.json
+2025-07-08 20:20:30,767 INFO Using receipt number: 132
+2025-07-08 20:20:31,171 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:31,342 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-27, Time: 15:35:26, Final Price: 11.37
+2025-07-08 20:20:31,382 INFO Starting to process file: paragon_2502278508157565.json
+2025-07-08 20:20:31,388 INFO Using receipt number: 168
+2025-07-08 20:20:31,785 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:31,959 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-27, Time: 15:33:29, Final Price: 36.93
+2025-07-08 20:20:32,000 INFO Starting to process file: paragon_2502284602127565.json
+2025-07-08 20:20:32,004 INFO Using receipt number: 144
+2025-07-08 20:20:32,436 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:32,604 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-28, Time: 14:04:10, Final Price: 54.91
+2025-07-08 20:20:32,643 INFO Starting to process file: paragon_2503015770097565.json
+2025-07-08 20:20:32,648 INFO Using receipt number: 22
+2025-07-08 20:20:33,048 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:33,219 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-01, Time: 09:04:24, Final Price: 22.98
+2025-07-08 20:20:33,255 INFO Starting to process file: paragon_2503049841157565.json
+2025-07-08 20:20:33,260 INFO Using receipt number: 256
+2025-07-08 20:20:33,666 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:33,944 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-04, Time: 19:43:54, Final Price: 80.64
+2025-07-08 20:20:33,982 INFO Starting to process file: paragon_2503079246153223.json
+2025-07-08 20:20:33,987 INFO Using receipt number: 152
+2025-07-08 20:20:34,380 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:20:34,552 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-07, Time: 19:39:31, Final Price: 44.64
+2025-07-08 20:20:34,589 INFO Starting to process file: paragon_2504170195084665.json
+2025-07-08 20:20:34,593 INFO Using receipt number: 179
+2025-07-08 20:20:35,011 INFO Store ID: 164 for 'BIEDRONKA'
+2025-07-08 20:20:35,175 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-17, Time: 17:21:38, Final Price: 25.64
+2025-07-08 20:20:35,212 INFO Starting to process file: paragon_2504222155157565.json
+2025-07-08 20:20:35,217 INFO Using receipt number: 72
+2025-07-08 20:20:35,615 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:35,779 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-22, Time: 12:59:06, Final Price: 299.21
+2025-07-08 20:20:35,819 INFO Starting to process file: paragon_2504222155157565_20250708_201502_fequ.json
+2025-07-08 20:20:35,823 INFO Using receipt number: 72
+2025-07-08 20:20:36,257 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:36,431 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-22, Time: 12:59:06, Final Price: 299.21
+2025-07-08 20:20:36,472 INFO Starting to process file: paragon_2504235827147565.json
+2025-07-08 20:20:36,476 INFO Using receipt number: 205
+2025-07-08 20:20:36,959 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:37,141 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-23, Time: 17:44:09, Final Price: 119.71
+2025-07-08 20:20:37,179 INFO Starting to process file: paragon_2504235827147565_20250708_201502_x93q.json
+2025-07-08 20:20:37,184 INFO Using receipt number: 205
+2025-07-08 20:20:37,589 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:37,759 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-23, Time: 17:44:09, Final Price: 119.71
+2025-07-08 20:20:37,800 INFO Starting to process file: paragon_2504243989013223.json
+2025-07-08 20:20:37,806 INFO Using receipt number: 255
+2025-07-08 20:20:38,236 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:20:38,306 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:20:38,404 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 10:15:59, Final Price: 107.89
+2025-07-08 20:20:38,446 INFO Starting to process file: paragon_2504243989013223_20250708_201502_5y1i.json
+2025-07-08 20:20:38,451 INFO Using receipt number: 255
+2025-07-08 20:20:38,856 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:20:38,923 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:20:39,031 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 10:15:59, Final Price: 107.89
+2025-07-08 20:20:39,071 INFO Starting to process file: paragon_2504245764137565.json
+2025-07-08 20:20:39,076 INFO Using receipt number: 28
+2025-07-08 20:20:39,473 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:39,639 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 08:42:19, Final Price: 51.1
+2025-07-08 20:20:39,677 INFO Starting to process file: paragon_2504245764137565_20250708_201502_0nuh.json
+2025-07-08 20:20:39,683 INFO Using receipt number: 28
+2025-07-08 20:20:40,103 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:40,284 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 08:42:19, Final Price: 51.1
+2025-07-08 20:20:40,336 INFO Starting to process file: paragon_2504265083013223.json
+2025-07-08 20:20:40,433 INFO Using receipt number: 348
+2025-07-08 20:20:40,842 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:20:40,951 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:20:41,060 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-26, Time: 16:24:22, Final Price: 115.08
+2025-07-08 20:20:41,101 INFO Starting to process file: paragon_2504265083013223_20250708_201502_n06j.json
+2025-07-08 20:20:41,107 INFO Using receipt number: 348
+2025-07-08 20:20:41,524 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:20:41,591 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:20:41,691 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-26, Time: 16:24:22, Final Price: 115.08
+2025-07-08 20:20:41,730 INFO Starting to process file: receipt (1).json
+2025-07-08 20:20:41,735 INFO Using receipt number: 167
+2025-07-08 20:20:42,188 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:42,356 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-14, Time: 17:54:25, Final Price: 19.77
+2025-07-08 20:20:42,394 INFO Starting to process file: receipt (1)_20250708_201502_vkci.json
+2025-07-08 20:20:42,400 INFO Using receipt number: 167
+2025-07-08 20:20:42,815 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:42,986 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-14, Time: 17:54:25, Final Price: 19.77
+2025-07-08 20:20:43,023 INFO Starting to process file: receipt.json
+2025-07-08 20:20:43,029 INFO Using receipt number: 109
+2025-07-08 20:20:43,483 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:43,665 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:20:43,702 INFO Starting to process file: receipt1.json
+2025-07-08 20:20:43,708 INFO Using receipt number: 109
+2025-07-08 20:20:44,144 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:44,313 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:20:44,354 INFO Starting to process file: receipt1_20250708_201502_kmez.json
+2025-07-08 20:20:44,361 INFO Using receipt number: 109
+2025-07-08 20:20:44,766 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:44,933 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:20:44,971 INFO Starting to process file: receipt_20250708_201502_s2mz.json
+2025-07-08 20:20:44,978 INFO Using receipt number: 109
+2025-07-08 20:20:45,392 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:20:45,591 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:24:56,118 INFO Starting to process file: 1.json
+2025-07-08 20:24:56,124 INFO Using receipt number: 108
+2025-07-08 20:24:56,529 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:24:56,707 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:38:13, Final Price: 38.55
+2025-07-08 20:24:56,746 INFO Starting to process file: 2505241721137565.json
+2025-07-08 20:24:56,752 INFO Using receipt number: 108
+2025-07-08 20:24:57,170 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:24:57,419 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:38:13, Final Price: 38.55
+2025-07-08 20:24:57,458 INFO Starting to process file: paragon_2502249950087565.json
+2025-07-08 20:24:57,464 INFO Using receipt number: 223
+2025-07-08 20:24:57,892 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:24:58,100 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-24, Time: 21:17:21, Final Price: 73.37
+2025-07-08 20:24:58,139 INFO Starting to process file: paragon_2502263221163213.json
+2025-07-08 20:24:58,145 INFO Using receipt number: 307
+2025-07-08 20:24:58,580 INFO Store ID: 16 for 'BIEDRONKA'
+2025-07-08 20:24:58,749 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-26, Time: 18:40:40, Final Price: 25.55
+2025-07-08 20:24:58,789 INFO Starting to process file: paragon_2502271370117565.json
+2025-07-08 20:24:58,794 INFO Using receipt number: 132
+2025-07-08 20:24:59,230 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:24:59,397 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-27, Time: 15:35:26, Final Price: 11.37
+2025-07-08 20:24:59,440 INFO Starting to process file: paragon_2502278508157565.json
+2025-07-08 20:24:59,447 INFO Using receipt number: 168
+2025-07-08 20:24:59,882 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:00,061 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-27, Time: 15:33:29, Final Price: 36.93
+2025-07-08 20:25:00,101 INFO Starting to process file: paragon_2502284602127565.json
+2025-07-08 20:25:00,108 INFO Using receipt number: 144
+2025-07-08 20:25:00,516 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:00,695 INFO [SKIP] Duplicate receipt detected - Date: 2025-02-28, Time: 14:04:10, Final Price: 54.91
+2025-07-08 20:25:00,734 INFO Starting to process file: paragon_2503015770097565.json
+2025-07-08 20:25:00,739 INFO Using receipt number: 22
+2025-07-08 20:25:01,165 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:01,346 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-01, Time: 09:04:24, Final Price: 22.98
+2025-07-08 20:25:01,391 INFO Starting to process file: paragon_2503049841157565.json
+2025-07-08 20:25:01,397 INFO Using receipt number: 256
+2025-07-08 20:25:01,834 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:02,013 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-04, Time: 19:43:54, Final Price: 80.64
+2025-07-08 20:25:02,052 INFO Starting to process file: paragon_2503079246153223.json
+2025-07-08 20:25:02,057 INFO Using receipt number: 152
+2025-07-08 20:25:02,468 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:25:02,639 INFO [SKIP] Duplicate receipt detected - Date: 2025-03-07, Time: 19:39:31, Final Price: 44.64
+2025-07-08 20:25:02,677 INFO Starting to process file: paragon_2503087477133223.json
+2025-07-08 20:25:02,683 INFO Using receipt number: 71
+2025-07-08 20:25:03,100 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:25:03,269 INFO Attempting to insert receipt with number: 71
+2025-07-08 20:25:03,337 INFO [ADD] Receipt ID: 55 for number '71' - Successfully added.
+2025-07-08 20:25:03,432 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503087477133223.json
+2025-07-08 20:25:03,438 INFO Starting to process file: paragon_2503087597133223.json
+2025-07-08 20:25:03,443 INFO Using receipt number: 191
+2025-07-08 20:25:03,859 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:25:04,049 INFO Attempting to insert receipt with number: 191
+2025-07-08 20:25:04,115 INFO [ADD] Receipt ID: 56 for number '191' - Successfully added.
+2025-07-08 20:25:04,185 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503087597133223.json
+2025-07-08 20:25:04,192 INFO Starting to process file: paragon_2503174367023223.json
+2025-07-08 20:25:04,197 INFO Using receipt number: 29
+2025-07-08 20:25:04,663 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:25:04,728 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:25:04,827 INFO Attempting to insert receipt with number: 29
+2025-07-08 20:25:04,901 INFO [ADD] Receipt ID: 57 for number '29' - Successfully added.
+2025-07-08 20:25:04,971 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503174367023223.json
+2025-07-08 20:25:04,977 INFO Starting to process file: paragon_2503184345087565.json
+2025-07-08 20:25:04,983 INFO Using receipt number: 139
+2025-07-08 20:25:05,443 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:05,610 INFO Attempting to insert receipt with number: 139
+2025-07-08 20:25:05,693 INFO [ADD] Receipt ID: 58 for number '139' - Successfully added.
+2025-07-08 20:25:05,764 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503184345087565.json
+2025-07-08 20:25:05,769 INFO Starting to process file: paragon_2503188616137565.json
+2025-07-08 20:25:05,774 INFO Using receipt number: 219
+2025-07-08 20:25:06,239 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:06,414 INFO Attempting to insert receipt with number: 219
+2025-07-08 20:25:06,484 INFO [ADD] Receipt ID: 59 for number '219' - Successfully added.
+2025-07-08 20:25:06,553 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503188616137565.json
+2025-07-08 20:25:06,559 INFO Starting to process file: paragon_2503189691167565.json
+2025-07-08 20:25:06,563 INFO Using receipt number: 210
+2025-07-08 20:25:06,990 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:07,161 INFO Attempting to insert receipt with number: 210
+2025-07-08 20:25:07,228 INFO [ADD] Receipt ID: 60 for number '210' - Successfully added.
+2025-07-08 20:25:07,298 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503189691167565.json
+2025-07-08 20:25:07,303 INFO Starting to process file: paragon_2503198452147565.json
+2025-07-08 20:25:07,307 INFO Using receipt number: 226
+2025-07-08 20:25:07,734 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:07,902 INFO Attempting to insert receipt with number: 226
+2025-07-08 20:25:07,976 INFO [ADD] Receipt ID: 61 for number '226' - Successfully added.
+2025-07-08 20:25:08,053 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503198452147565.json
+2025-07-08 20:25:08,058 INFO Starting to process file: paragon_2503219301137565.json
+2025-07-08 20:25:08,064 INFO Using receipt number: 196
+2025-07-08 20:25:08,480 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:08,649 INFO Attempting to insert receipt with number: 196
+2025-07-08 20:25:08,716 INFO [ADD] Receipt ID: 62 for number '196' - Successfully added.
+2025-07-08 20:25:08,793 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503219301137565.json
+2025-07-08 20:25:08,798 INFO Starting to process file: paragon_2503221279127565.json
+2025-07-08 20:25:08,804 INFO Using receipt number: 232
+2025-07-08 20:25:09,238 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:09,467 INFO Attempting to insert receipt with number: 232
+2025-07-08 20:25:09,541 INFO [ADD] Receipt ID: 63 for number '232' - Successfully added.
+2025-07-08 20:25:09,610 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503221279127565.json
+2025-07-08 20:25:09,616 INFO Starting to process file: paragon_2503221405107565.json
+2025-07-08 20:25:09,621 INFO Using receipt number: 122
+2025-07-08 20:25:10,031 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:10,216 INFO Attempting to insert receipt with number: 122
+2025-07-08 20:25:10,282 INFO [ADD] Receipt ID: 64 for number '122' - Successfully added.
+2025-07-08 20:25:10,352 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503221405107565.json
+2025-07-08 20:25:10,359 INFO Starting to process file: paragon_2503272168167565.json
+2025-07-08 20:25:10,364 INFO Using receipt number: 146
+2025-07-08 20:25:10,761 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:10,937 INFO Attempting to insert receipt with number: 146
+2025-07-08 20:25:11,006 INFO [ADD] Receipt ID: 65 for number '146' - Successfully added.
+2025-07-08 20:25:11,078 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503272168167565.json
+2025-07-08 20:25:11,084 INFO Starting to process file: paragon_2503280031133223.json
+2025-07-08 20:25:11,089 INFO Using receipt number: 159
+2025-07-08 20:25:11,511 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:25:11,681 INFO Attempting to insert receipt with number: 159
+2025-07-08 20:25:11,752 INFO [ADD] Receipt ID: 66 for number '159' - Successfully added.
+2025-07-08 20:25:11,822 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503280031133223.json
+2025-07-08 20:25:11,829 INFO Starting to process file: paragon_2503291787143223.json
+2025-07-08 20:25:11,834 INFO Using receipt number: 138
+2025-07-08 20:25:12,253 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:25:12,421 INFO Attempting to insert receipt with number: 138
+2025-07-08 20:25:12,487 INFO [ADD] Receipt ID: 67 for number '138' - Successfully added.
+2025-07-08 20:25:12,572 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503291787143223.json
+2025-07-08 20:25:12,578 INFO Starting to process file: paragon_2503311322137565.json
+2025-07-08 20:25:12,584 INFO Using receipt number: 273
+2025-07-08 20:25:13,000 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:13,186 INFO Attempting to insert receipt with number: 273
+2025-07-08 20:25:13,256 INFO [ADD] Receipt ID: 68 for number '273' - Successfully added.
+2025-07-08 20:25:13,327 INFO [SUCCESS] Successfully processed and moved receipt paragon_2503311322137565.json
+2025-07-08 20:25:13,332 INFO Starting to process file: paragon_2504027369087565.json
+2025-07-08 20:25:13,337 INFO Using receipt number: 52
+2025-07-08 20:25:13,780 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:14,005 INFO Attempting to insert receipt with number: 52
+2025-07-08 20:25:14,072 INFO [ADD] Receipt ID: 69 for number '52' - Successfully added.
+2025-07-08 20:25:14,141 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504027369087565.json
+2025-07-08 20:25:14,149 INFO Starting to process file: paragon_2504055223013223.json
+2025-07-08 20:25:14,154 INFO Using receipt number: 107
+2025-07-08 20:25:14,607 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:25:14,674 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:25:14,784 INFO Attempting to insert receipt with number: 107
+2025-07-08 20:25:14,852 INFO [ADD] Receipt ID: 70 for number '107' - Successfully added.
+2025-07-08 20:25:14,942 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504055223013223.json
+2025-07-08 20:25:14,949 INFO Starting to process file: paragon_2504072578137565.json
+2025-07-08 20:25:14,954 INFO Using receipt number: 83
+2025-07-08 20:25:15,360 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:15,530 INFO Attempting to insert receipt with number: 83
+2025-07-08 20:25:15,604 INFO [ADD] Receipt ID: 71 for number '83' - Successfully added.
+2025-07-08 20:25:15,678 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504072578137565.json
+2025-07-08 20:25:15,684 INFO Starting to process file: paragon_2504072745137565.json
+2025-07-08 20:25:15,689 INFO Using receipt number: 246
+2025-07-08 20:25:16,123 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:16,293 INFO Attempting to insert receipt with number: 246
+2025-07-08 20:25:16,363 INFO [ADD] Receipt ID: 72 for number '246' - Successfully added.
+2025-07-08 20:25:16,431 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504072745137565.json
+2025-07-08 20:25:16,436 INFO Starting to process file: paragon_2504079113163951.json
+2025-07-08 20:25:16,441 INFO Using receipt number: 168
+2025-07-08 20:25:20,874 INFO Saved mapping: VISA DEBIT 07 1 -> user_id 3
+2025-07-08 20:25:20,991 INFO Store ID: 235 for 'BIEDRONKA'
+2025-07-08 20:25:21,057 INFO Marking receipt as 'not ours' for payment name: VISA DEBIT 07 1
+2025-07-08 20:25:21,161 INFO Attempting to insert receipt with number: 168
+2025-07-08 20:25:21,228 INFO [ADD] Receipt ID: 73 for number '168' - Successfully added.
+2025-07-08 20:25:21,298 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504079113163951.json
+2025-07-08 20:25:21,304 INFO Starting to process file: paragon_2504096399127565.json
+2025-07-08 20:25:21,309 INFO Using receipt number: 264
+2025-07-08 20:25:21,810 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:22,003 INFO Attempting to insert receipt with number: 264
+2025-07-08 20:25:22,071 INFO [ADD] Receipt ID: 74 for number '264' - Successfully added.
+2025-07-08 20:25:22,141 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504096399127565.json
+2025-07-08 20:25:22,148 INFO Starting to process file: paragon_2504096400127565.json
+2025-07-08 20:25:22,152 INFO Using receipt number: 265
+2025-07-08 20:25:22,590 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:22,757 INFO Attempting to insert receipt with number: 265
+2025-07-08 20:25:22,823 INFO [ADD] Receipt ID: 75 for number '265' - Successfully added.
+2025-07-08 20:25:22,889 INFO [SUCCESS] Successfully processed and moved receipt paragon_2504096400127565.json
+2025-07-08 20:25:22,898 INFO Starting to process file: paragon_2504170195084665 (1).json
+2025-07-08 20:25:22,902 INFO Using receipt number: 179
+2025-07-08 20:25:23,323 INFO Store ID: 164 for 'BIEDRONKA'
+2025-07-08 20:25:23,489 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-17, Time: 17:21:38, Final Price: 25.64
+2025-07-08 20:25:23,528 INFO Starting to process file: paragon_2504170195084665.json
+2025-07-08 20:25:23,532 INFO Using receipt number: 179
+2025-07-08 20:25:23,938 INFO Store ID: 164 for 'BIEDRONKA'
+2025-07-08 20:25:24,111 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-17, Time: 17:21:38, Final Price: 25.64
+2025-07-08 20:25:24,149 INFO Starting to process file: paragon_2504222155157565.json
+2025-07-08 20:25:24,154 INFO Using receipt number: 72
+2025-07-08 20:25:24,559 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:24,724 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-22, Time: 12:59:06, Final Price: 299.21
+2025-07-08 20:25:24,763 INFO Starting to process file: paragon_2504235827147565.json
+2025-07-08 20:25:24,768 INFO Using receipt number: 205
+2025-07-08 20:25:25,190 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:25,358 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-23, Time: 17:44:09, Final Price: 119.71
+2025-07-08 20:25:25,402 INFO Starting to process file: paragon_2504243989013223.json
+2025-07-08 20:25:25,408 INFO Using receipt number: 255
+2025-07-08 20:25:25,825 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:25:25,894 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:25:25,999 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 10:15:59, Final Price: 107.89
+2025-07-08 20:25:26,045 INFO Starting to process file: paragon_2504245764137565.json
+2025-07-08 20:25:26,051 INFO Using receipt number: 28
+2025-07-08 20:25:26,502 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:26,669 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-24, Time: 08:42:19, Final Price: 51.1
+2025-07-08 20:25:26,708 INFO Starting to process file: paragon_2504265083013223.json
+2025-07-08 20:25:26,713 INFO Using receipt number: 348
+2025-07-08 20:25:27,127 INFO Store ID: 53 for 'BIEDRONKA'
+2025-07-08 20:25:27,197 INFO Marking receipt as 'not ours' for payment name: MasterCard 07 1
+2025-07-08 20:25:27,299 INFO [SKIP] Duplicate receipt detected - Date: 2025-04-26, Time: 16:24:22, Final Price: 115.08
+2025-07-08 20:25:27,341 INFO Starting to process file: receipt (1).json
+2025-07-08 20:25:27,347 INFO Using receipt number: 167
+2025-07-08 20:25:27,777 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:27,942 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-14, Time: 17:54:25, Final Price: 19.77
+2025-07-08 20:25:27,987 INFO Starting to process file: receipt.json
+2025-07-08 20:25:27,993 INFO Using receipt number: 109
+2025-07-08 20:25:28,420 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:28,592 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-08 20:25:28,630 INFO Starting to process file: receipt1.json
+2025-07-08 20:25:28,635 INFO Using receipt number: 109
+2025-07-08 20:25:29,066 INFO Store ID: 1 for 'BIEDRONKA'
+2025-07-08 20:25:29,239 INFO [SKIP] Duplicate receipt detected - Date: 2025-05-24, Time: 14:40:08, Final Price: 98.39
+2025-07-11 15:04:48,732 INFO === Parser module imported: log file creation test ===
+2025-07-15 12:16:26,751 INFO === Parser module imported: log file creation test ===
+2025-07-15 12:25:19,303 INFO === Parser module imported: log file creation test ===
+2025-07-15 14:58:54,251 INFO === Parser module imported: log file creation test ===
+2025-07-15 15:05:32,812 INFO === Parser module imported: log file creation test ===
+2025-07-15 15:33:40,159 INFO === Parser module imported: log file creation test ===
+2025-07-15 17:06:32,984 INFO === Parser module imported: log file creation test ===
+2025-07-15 17:18:14,998 INFO === Parser module imported: log file creation test ===
+2025-07-15 17:32:23,082 INFO === Parser module imported: log file creation test ===
+2025-07-15 18:55:24,233 INFO === Parser module imported: log file creation test ===
+2025-07-15 20:09:08,211 INFO === Parser module imported: log file creation test ===
+2025-07-15 20:40:37,255 INFO === Parser module imported: log file creation test ===
+2025-07-15 20:54:53,945 INFO === Parser module imported: log file creation test ===
+2025-07-15 21:16:08,029 INFO === Parser module imported: log file creation test ===
+2025-07-15 21:41:03,593 INFO === Parser module imported: log file creation test ===
+2025-07-15 21:47:42,478 INFO === Parser module imported: log file creation test ===
+2025-07-15 21:54:37,860 INFO === Parser module imported: log file creation test ===
+2025-07-15 22:02:13,841 INFO === Parser module imported: log file creation test ===
+2025-07-16 10:44:54,354 INFO === Parser module imported: log file creation test ===
