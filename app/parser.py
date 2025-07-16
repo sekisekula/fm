@@ -1,4 +1,4 @@
-from app.config import Config
+import os
 import logging
 from pathlib import Path
 import json
@@ -16,6 +16,9 @@ from app.db.utils import transaction_scope
 from typing import Optional, Dict, Any, List
 import traceback
 import time
+from app.config import Config
+
+os.makedirs('/app/logs', exist_ok=True)
 
 logger = logging.getLogger(__name__)
 
