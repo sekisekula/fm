@@ -1738,7 +1738,6 @@ async def browse_receipts(filter_type: str = "all"):
     """Zwraca listę paragonów z możliwością filtrowania."""
     db = SessionLocal()
     try:
-        # Buduj zapytanie SQL w zależności od filtra
         base_query = """
             SELECT r.receipt_id, r.date, r.time, r.final_price, r.counted, r.settled,
                    s.store_name, s.store_address, up.payment_name, u.name as user_name, u.user_id
@@ -1748,14 +1747,14 @@ async def browse_receipts(filter_type: str = "all"):
             JOIN users u ON up.user_id = u.user_id
         """
         where = []
-        if filter_type == "counted":
-            where.append("r.counted = true")
-        elif filter_type == "settled":
-            where.append("r.settled = true")
         if filter_type == "inne":
             where.append("(u.user_id = 100 OR lower(u.name) IN ('inny','other'))")
         else:
             where.append("NOT (u.user_id = 100 OR lower(u.name) IN ('inny','other'))")
+            if filter_type == "counted":
+                where.append("r.counted = true")
+            elif filter_type == "settled":
+                where.append("r.settled = true")
         query = base_query
         if where:
             query += " WHERE " + " AND ".join(where)
@@ -1802,7 +1801,9 @@ async def get_receipt_details(receipt_id: int):
         # Pobierz imię płacącego
         payer_name = db.execute(text("""
             SELECT u.name FROM user_payments up JOIN users u ON up.user_id = u.user_id WHERE up.payment_name = :pname
-        """), {"pname": receipt_row[10]}).scalar() or receipt_row[10]
+        """), {"pname": receipt_row[10]}).scalar()
+        if not payer_name:
+            payer_name = receipt_row[10]  # payment_name jako fallback
 
         # Pobierz użytkowników
         users = db.execute(text("SELECT user_id, name FROM users")).fetchall()
