@@ -1739,40 +1739,28 @@ async def browse_receipts(filter_type: str = "all"):
     db = SessionLocal()
     try:
         # Buduj zapytanie SQL w zależności od filtra
+        base_query = """
+            SELECT r.receipt_id, r.date, r.time, r.final_price, r.counted, r.settled,
+                   s.store_name, s.store_address, up.payment_name, u.name as user_name, u.user_id
+            FROM receipts r
+            JOIN stores s ON r.store_id = s.store_id
+            JOIN user_payments up ON r.payment_name = up.payment_name
+            JOIN users u ON up.user_id = u.user_id
+        """
+        where = []
         if filter_type == "counted":
-            query = text("""
-                SELECT r.receipt_id, r.date, r.time, r.final_price, r.counted, r.settled,
-                       s.store_name, s.store_address, up.payment_name, u.name as user_name
-                FROM receipts r
-                JOIN stores s ON r.store_id = s.store_id
-                JOIN user_payments up ON r.payment_name = up.payment_name
-                JOIN users u ON up.user_id = u.user_id
-                WHERE r.counted = true
-                ORDER BY r.date DESC, r.time DESC
-            """)
+            where.append("r.counted = true")
         elif filter_type == "settled":
-            query = text("""
-                SELECT r.receipt_id, r.date, r.time, r.final_price, r.counted, r.settled,
-                       s.store_name, s.store_address, up.payment_name, u.name as user_name
-                FROM receipts r
-                JOIN stores s ON r.store_id = s.store_id
-                JOIN user_payments up ON r.payment_name = up.payment_name
-                JOIN users u ON up.user_id = u.user_id
-                WHERE r.settled = true
-                ORDER BY r.date DESC, r.time DESC
-            """)
-        else:  # "all"
-            query = text("""
-                SELECT r.receipt_id, r.date, r.time, r.final_price, r.counted, r.settled,
-                       s.store_name, s.store_address, up.payment_name, u.name as user_name
-                FROM receipts r
-                JOIN stores s ON r.store_id = s.store_id
-                JOIN user_payments up ON r.payment_name = up.payment_name
-                JOIN users u ON up.user_id = u.user_id
-                ORDER BY r.date DESC, r.time DESC
-            """)
-        
-        result = db.execute(query)
+            where.append("r.settled = true")
+        if filter_type == "inne":
+            where.append("(u.user_id = 100 OR lower(u.name) IN ('inny','other'))")
+        else:
+            where.append("NOT (u.user_id = 100 OR lower(u.name) IN ('inny','other'))")
+        query = base_query
+        if where:
+            query += " WHERE " + " AND ".join(where)
+        query += " ORDER BY r.date DESC, r.time DESC"
+        result = db.execute(text(query))
         receipts = []
         for row in result:
             receipts.append({
@@ -1801,17 +1789,20 @@ async def get_receipt_details(receipt_id: int):
             SELECT r.receipt_id, r.date, r.time, r.final_price, r.total_discounts, 
                    r.counted, r.settled, r.currency,
                    s.store_name, s.store_address, s.store_city,
-                   up.payment_name, u.name as user_name
+                   r.payment_name
             FROM receipts r
             JOIN stores s ON r.store_id = s.store_id
-            JOIN user_payments up ON r.payment_name = up.payment_name
-            JOIN users u ON up.user_id = u.user_id
             WHERE r.receipt_id = :receipt_id
         """)
         receipt_result = db.execute(receipt_query, {"receipt_id": receipt_id})
         receipt_row = receipt_result.fetchone()
         if not receipt_row:
             raise HTTPException(status_code=404, detail="Paragon nie został znaleziony")
+
+        # Pobierz imię płacącego
+        payer_name = db.execute(text("""
+            SELECT u.name FROM user_payments up JOIN users u ON up.user_id = u.user_id WHERE up.payment_name = :pname
+        """), {"pname": receipt_row[10]}).scalar() or receipt_row[10]
 
         # Pobierz użytkowników
         users = db.execute(text("SELECT user_id, name FROM users")).fetchall()
@@ -1885,7 +1876,7 @@ async def get_receipt_details(receipt_id: int):
                 "store_address": receipt_row[9],
                 "store_city": receipt_row[10],
                 "payment_name": receipt_row[11],
-                "payer_name": receipt_row[12]
+                "payer_name": payer_name  # <-- imię użytkownika płacącego
             },
             "products": products,
             "settlements": settlements
