@@ -10,3 +10,6 @@ pydantic>=1.8.2
 python-dateutil>=2.8.2
 colorama>=0.4.4
 supabase>=1.0.3
+pdfplumber
+pytesseract
+Pillow

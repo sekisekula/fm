@@ -182,30 +182,46 @@ async def main_interface():
     """
 
 @app.post("/upload/")
-async def upload_files(files: List[UploadFile] = File(..., description="Upload up to 500 JSON files at once", max_items=500)):
+async def upload_files(files: List[UploadFile] = File(..., description="Upload up to 500 JSON or PDF files at once", max_items=500)):
     logger.info(f"Received {len(files)} files for upload.")
     if len(files) > 500:
         return JSONResponse(status_code=400, content={"detail": "You can upload up to 500 files at once."})
     results = []
     for file in files:
-        if file.filename and file.filename.endswith(".json"):
+        if file.filename and (file.filename.endswith(".json") or file.filename.endswith(".pdf")):
             orig_filename = file.filename
             try:
                 content = await file.read()
-                try:
-                    data = _json.loads(content)
-                    process_receipt_data(data)
-                    results.append({
-                        "filename": orig_filename,
-                        "status": "success",
-                        "detail": "Paragon zapisany do bazy."
-                    })
-                except Exception as ve:
-                    results.append({
-                        "filename": orig_filename,
-                        "status": "error",
-                        "detail": f"Błąd: {ve}"
-                    })
+                if file.filename.endswith(".json"):
+                    try:
+                        data = _json.loads(content)
+                        process_receipt_data(data)
+                        results.append({
+                            "filename": orig_filename,
+                            "status": "success",
+                            "detail": "Paragon zapisany do bazy."
+                        })
+                    except Exception as ve:
+                        results.append({
+                            "filename": orig_filename,
+                            "status": "error",
+                            "detail": f"Błąd: {ve}"
+                        })
+                elif file.filename.endswith(".pdf"):
+                    try:
+                        from app.parser import process_pdf_file
+                        process_pdf_file(content, orig_filename)
+                        results.append({
+                            "filename": orig_filename,
+                            "status": "success",
+                            "detail": "PDF zapisany do bazy/paragonów."
+                        })
+                    except Exception as ve:
+                        results.append({
+                            "filename": orig_filename,
+                            "status": "error",
+                            "detail": f"Błąd PDF: {ve}"
+                        })
             except Exception as e:
                 results.append({
                     "filename": orig_filename,
@@ -216,7 +232,7 @@ async def upload_files(files: List[UploadFile] = File(..., description="Upload u
             results.append({
                 "filename": file.filename,
                 "status": "skipped",
-                "detail": "Unsupported file format (expected .json)."
+                "detail": "Unsupported file format (expected .json or .pdf)."
             })
     return JSONResponse(content={"results": results})
 
@@ -244,11 +260,11 @@ UPLOAD_FORM = """
     <div class="container">
         <a href="/" class="back-btn">← Powrót do menu</a>
         <h1>📄 Wrzuć Paragony</h1>
-        <p>Możesz wrzucić do 500 plików JSON z paragonami na raz.</p>
+        <p>Możesz wrzucić do 500 plików JSON lub PDF z paragonami na raz.</p>
         <form id="uploadForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="files">Wybierz pliki:</label>
-                <input type="file" id="files" name="files" multiple accept=".json">
+                <input type="file" id="files" name="files" multiple accept=".json,.pdf">
             </div>
             <button type="submit">Wrzuć Pliki</button>
         </form>
@@ -1011,17 +1027,24 @@ async def browse_receipts_page():
                 font-size: 0.8em;
                 font-weight: 500;
             }
-            .status-counted {
-                background: var(--success);
+            .status-settled {
+                background: #28a745;
                 color: #fff;
             }
-            .status-settled {
-                background: var(--info);
+            .status-counted {
+                background: #7ee89c;
+                color: #146c2b;
+            }
+            .status-tocount {
+                background: #E9ECEF;
+                color: #222;
+            }
+            .status-unassigned {
+                background: #FF0000;
                 color: #fff;
             }
             .status-pending {
-                background: var(--warning);
-                color: #000;
+                display: none;
             }
             .loading {
                 text-align: center;
@@ -1140,6 +1163,34 @@ async def browse_receipts_page():
                 .filter-buttons { justify-content: center; }
                 .modal-content { margin: 10px; }
             }
+            .receipt-card, .receipt-card * {
+                box-sizing: border-box;
+            }
+            .receipt-card-header-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                gap: 8px;
+                margin-bottom: 6px;
+                box-sizing: border-box;
+            }
+            .status-badge {
+                margin-left: auto;
+                float: none;
+            }
+            .payer-name {
+                font-style: italic;
+                color: #888;
+                font-size: 1em;
+                font-weight: 400;
+            }
+            .receipt-bottom-label {
+                font-weight: bold;
+                font-size: 1.18em;
+                margin-top: 18px;
+                letter-spacing: 0.5px;
+            }
         </style>
     </head>
     <body>
@@ -1156,19 +1207,12 @@ async def browse_receipts_page():
                 <a href="/" class="back-btn">← Powrót do menu</a>
             </div>
             
-            <div class="filters">
+            <div style="background: var(--card); padding: 20px; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 20px;">
                 <h3 style="margin: 0 0 15px 0; color: var(--text);">Filtry:</h3>
-                <div class="filter-buttons" style="justify-content: space-between;">
-                    <div style="display: flex; gap: 10px;">
-                        <button class="filter-btn active" data-filter="all">Wszystkie</button>
-                        <button class="filter-btn" data-filter="counted">Tylko podliczone</button>
-                        <button class="filter-btn" data-filter="settled">Tylko rozliczone</button>
-                    </div>
-                    <button class="filter-btn" data-filter="inne" style="margin-left:auto;">Inne</button>
-                </div>
+                <div id="filters"></div>
             </div>
             
-            <div id="receipts-container">
+            <div id="receipts-container" class="receipts-grid">
                 <div class="loading">
                     <div class="spinner"></div>
                     <p>Ładowanie paragonów i wydatków...</p>
@@ -1220,116 +1264,149 @@ async def browse_receipts_page():
             });
         });
         
-        async function loadReceipts(filterType) {
+        // --- Nowy układ filtrów ---
+        function renderFilters(activeFilter) {
+            const filtersDiv = document.getElementById('filters');
+            filtersDiv.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+                    <div style="display:flex;gap:8px;">
+                        <button class="filter-btn${activeFilter==='all' ? ' active' : ''}" data-filter="all">Do rozliczenia</button>
+                        <button class="filter-btn${activeFilter==='counted' ? ' active' : ''}" data-filter="counted">Podliczone</button>
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <button class="filter-btn${activeFilter==='settled' ? ' active' : ''}" data-filter="settled">Rozliczone</button>
+                        <button class="filter-btn${activeFilter==='inne' ? ' active' : ''}" data-filter="inne">Inne (prawdopodobnie cudze)</button>
+                    </div>
+                </div>
+            `;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.onclick = () => loadReceipts(btn.dataset.filter);
+            });
+        }
+        
+        // --- Modyfikacja loadReceipts ---
+        async function loadReceipts(filterType = 'all') {
+            renderFilters(filterType);
             const container = document.getElementById('receipts-container');
+            container.className = 'receipts-grid'; // Ustaw grid zawsze
             container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Ładowanie paragonów i wydatków...</p></div>';
             try {
                 // Pobierz paragony i wydatki manualne równocześnie
                 const [receiptsResp, manualResp] = await Promise.all([
-                    fetch(`/api/browse-receipts?filter_type=all`),
-                    fetch(`/api/manual-expenses?filter_type=all`)
+                    fetch(`/api/browse-receipts?filter_type=${filterType}`),
+                    fetch(`/api/manual-expenses?filter_type=${filterType}`)
                 ]);
                 let receipts = await receiptsResp.json();
                 let manualExpenses = await manualResp.json();
-                if (receiptsResp.ok && manualResp.ok) {
-                    // Filtrowanie jak dotychczas
-                    if (filterType === 'all') {
-                        receipts = receipts.filter(r => r.user_name !== 'Other');
-                        manualExpenses = manualExpenses.filter(m => m.user_name !== 'Other');
-                    } else if (filterType === 'inne') {
-                        receipts = receipts.filter(r => r.user_name === 'Other');
-                        manualExpenses = manualExpenses.filter(m => m.user_name === 'Other');
-                    } else if (filterType === 'counted') {
-                        receipts = receipts.filter(r => r.counted && r.user_name !== 'Other');
-                        manualExpenses = manualExpenses.filter(m => m.counted && m.user_name !== 'Other');
-                    } else if (filterType === 'settled') {
-                        receipts = receipts.filter(r => r.settled && r.user_name !== 'Other');
-                        manualExpenses = manualExpenses.filter(m => m.settled && m.user_name !== 'Other');
-                    }
-                    if (receipts.length === 0 && manualExpenses.length === 0) {
-                        container.innerHTML = '<div class="no-receipts"><p>Brak paragonów ani wydatków spełniających kryteria.</p></div>';
-                        return;
-                    }
-                    container.innerHTML = `
-                        <div class="receipts-grid">
-                            ${receipts.map(receipt => createReceiptCard(receipt)).join('')}
-                            ${manualExpenses.map(exp => createManualExpenseCard(exp)).join('')}
-                        </div>
-                    `;
-                } else {
-                    container.innerHTML = '<div class="no-receipts"><p>Błąd: ' + ((receipts.detail || manualExpenses.detail) || 'Nieznany błąd') + '</p></div>';
+                // --- Klasyfikacja statusów ---
+                function getStatus(item) {
+                    if (item.settled) return 'settled';
+                    if (item.counted) return 'counted';
+                    if (item.unassigned) return 'unassigned';
+                    if (item.user_name && (item.user_name.toLowerCase() === 'inny' || item.user_name.toLowerCase() === 'other')) return 'inne';
+                    if (item.payment_name) return 'tocount';
+                    return 'inne';
                 }
-            } catch (error) {
-                container.innerHTML = '<div class="no-receipts"><p>Błąd sieci: ' + error.message + '</p></div>';
+                // --- Filtrowanie ---
+                let allItems = [...receipts, ...manualExpenses];
+                // Ujednolicenie daty do sortowania
+                allItems.forEach(i => { i._sortDate = i.date || i.transaction_date || i.created_at || ''; });
+                // Filtrowanie wg aktywnego filtra
+                let filtered = allItems.filter(item => {
+                    const status = getStatus(item);
+                    if (filterType === 'all') return status !== 'settled'; // Do rozliczenia: wszystko poza rozliczonymi
+                    if (filterType === 'counted') return status === 'counted';
+                    if (filterType === 'settled') return status === 'settled';
+                    if (filterType === 'inne') return (item.user_name && (item.user_name.toLowerCase() === 'inny' || item.user_name.toLowerCase() === 'other'));
+                    return true;
+                });
+                // Sortowanie od najnowszego do najstarszego
+                filtered.sort((a, b) => (b._sortDate || '').localeCompare(a._sortDate || ''));
+                // Renderuj kafelki
+                container.innerHTML = filtered.map(item => {
+                    if (item.manual_expense_id !== undefined) {
+                        return createManualExpenseCard(item);
+                    } else {
+                        return createReceiptCard(item);
+                    }
+                }).join('') || '<div style="color:#888;text-align:center;margin:32px 0;">Brak wyników.</div>';
+            } catch (err) {
+                container.innerHTML = `<div style='color:#dc3545;text-align:center;margin:32px 0;'>Błąd ładowania: ${err.message}</div>`;
             }
         }
+        // --- Domyślny filtr po załadowaniu widoku ---
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReceipts('all'); // "Do rozliczenia" jako domyślny
+        });
+        // --- Style aktywnego filtra ---
+        const filterStyle = document.createElement('style');
+        filterStyle.innerHTML = `
+        .filter-btn { background:#f8f9fa; color:#007BFF; border:1px solid #CED4DA; border-radius:6px; padding:8px 18px; font-size:1.08em; cursor:pointer; transition:background 0.15s; margin-bottom:4px; }
+        .filter-btn.active { background:#007BFF; color:#fff; border-color:#007BFF; }
+        .filter-btn:not(.active):hover { background:#e9ecef; }
+        `;
+        document.head.appendChild(filterStyle);
         
+        function getStatus(obj) {
+            if (obj.settled) return 'settled';
+            if (obj.counted) return 'counted';
+            if (obj.unassigned) return 'unassigned';
+            if (!obj.counted && !obj.settled) return 'tocount';
+            return '';
+        }
+        function getStatusLabel(obj) {
+            if (obj.settled) return 'Rozliczony';
+            if (obj.counted) return 'Podliczony';
+            if (obj.unassigned) return 'Nieprzypisany';
+            if (!obj.counted && !obj.settled) return 'Do podliczenia';
+            return '';
+        }
+
+        // --- Ujednolicone kafelki ---
         function createReceiptCard(receipt) {
-            const statusBadges = [];
-            if (receipt.counted) {
-                statusBadges.push('<span class="status-badge status-counted">Podliczony</span>');
-            } else {
-                statusBadges.push('<span class="status-badge status-pending">Niepodliczony</span>');
-            }
-            
-            if (receipt.settled) {
-                statusBadges.push('<span class="status-badge status-settled">Rozliczony</span>');
-            }
-            
+            const isBiedronka = receipt.store_name && receipt.store_name.toLowerCase().includes('biedronka');
+            const icon = isBiedronka ? '🐞' : '💸';
             return `
-                <div class="receipt-card" onclick="showReceiptDetails(${receipt.receipt_id})">
-                    <div class="receipt-header">
-                        <div class="receipt-date">${receipt.date} ${receipt.time}</div>
-                        <div class="receipt-amount">${receipt.final_price.toFixed(2)} PLN</div>
-                    </div>
-                    <div class="receipt-store">${receipt.store_name}</div>
-                    <div class="receipt-address">${receipt.store_address}</div>
-                    <div class="receipt-payment">Zapłacił: ${receipt.user_name}</div>
-                    <div class="receipt-status">
-                        ${statusBadges.join('')}
-                    </div>
+            <div class="receipt-card" onclick="showReceiptDetails(${receipt.receipt_id})">
+                <div class="receipt-card-header-row">
+                    <span class="receipt-logo-date">
+                        <span class="receipt-emoji">${icon}</span>
+                        <span class="receipt-date">${receipt.date}</span>
+                    </span>
+                    <span class="status-badge status-${getStatus(receipt)}">${getStatusLabel(receipt)}</span>
                 </div>
-            `;
+                <div class="receipt-amount">${typeof receipt.final_price === 'number' ? receipt.final_price.toFixed(2) : '-'} PLN</div>
+                <div class="receipt-meta payer-meta"><span class="payer-name">${receipt.user_name || '-'}</span></div>
+                <div class="receipt-bottom-label">${(receipt.store_name || '').toUpperCase()}</div>
+            </div>`;
         }
-        
+
         function createManualExpenseCard(exp) {
-            // Styl podobny do createReceiptCard
-            const statusBadges = [];
-            if (exp.counted) {
-                statusBadges.push('<span class="status-badge status-counted">Podliczony</span>');
-            } else {
-                statusBadges.push('<span class="status-badge status-pending">Niepodliczony</span>');
-            }
-            if (exp.settled) {
-                statusBadges.push('<span class="status-badge status-settled">Rozliczony</span>');
-            }
             return `
-                <div class="receipt-card manual-expense-card">
-                    <div class="receipt-header">
-                        <div class="receipt-date">${exp.date}</div>
-                        <div class="receipt-amount">${exp.total_cost.toFixed(2)} PLN</div>
-                    </div>
-                    <div class="receipt-store">${exp.description}</div>
-                    <div class="receipt-address">Kategoria: ${exp.category}</div>
-                    <div class="receipt-payment">Zapłacił: ${exp.user_name}</div>
-                    <div class="receipt-status">
-                        ${statusBadges.join('')}
-                    </div>
+            <div class="receipt-card" onclick="showManualExpenseDetails(${exp.manual_expense_id})">
+                <div class="receipt-card-header-row">
+                    <span class="receipt-logo-date">
+                        <span class="receipt-emoji">💸</span>
+                        <span class="receipt-date">${exp.date}</span>
+                    </span>
+                    <span class="status-badge status-${getStatus(exp)}">${getStatusLabel(exp)}</span>
                 </div>
-            `;
+                <div class="receipt-amount">${typeof exp.total_cost === 'number' ? exp.total_cost.toFixed(2) : '-' } PLN</div>
+                <div class="receipt-meta payer-meta"><span class="payer-name">${exp.user_name || '-'}</span></div>
+                <div class="receipt-bottom-label">${(exp.description || '').toUpperCase()}</div>
+            </div>`;
         }
         
-        async function showReceiptDetails(receiptId) {
+        let lastClickedUserName = null;
+        async function showReceiptDetails(receiptId, userName) {
+            lastClickedUserName = userName;
             const modal = document.getElementById('receipt-modal');
             const modalBody = document.getElementById('modal-body');
-            
             modalBody.innerHTML = '<div class="loading"><div class="spinner"></div><p>Ładowanie szczegółów...</p></div>';
             modal.style.display = 'block';
-            
             try {
                 const response = await fetch(`/api/receipt-details/${receiptId}`);
                 const data = await response.json();
-                
                 if (response.ok) {
                     modalBody.innerHTML = createReceiptDetailsHTML(data);
                 } else {
@@ -1372,14 +1449,14 @@ async def browse_receipts_page():
                                 return `
                                     <tr>
                                         <td>${product.product_name}</td>
-                                        <td>${product.quantity}</td>
-                                        <td>${product.unit_price_before.toFixed(2)} PLN</td>
-                                        <td>${product.total_discount > 0 ? product.total_discount.toFixed(2) + ' PLN' : '-'}</td>
-                                        <td>${product.total_after_discount.toFixed(2)} PLN</td>
+                                        <td>${product.quantity != null ? product.quantity : '-'}</td>
+                                        <td>${product.unit_price_before != null ? product.unit_price_before.toFixed(2) : '-'} PLN</td>
+                                        <td>${product.total_discount != null && product.total_discount > 0 ? product.total_discount.toFixed(2) + ' PLN' : '-'}</td>
+                                        <td>${product.total_after_discount != null ? product.total_after_discount.toFixed(2) : '-'} PLN</td>
                                         <td>
                                             ${shares && shares.length > 0 ?
                                                 shares.map(share =>
-                                                    `<div><strong>${share.user_name}</strong>: ${formatPercent(share.share)} (${share.amount.toFixed(2)} PLN)</div>`
+                                                    `<div><strong>${share.user_name}</strong>: ${formatPercent(share.share)} (${share.amount != null ? share.amount.toFixed(2) : '-'} PLN)</div>`
                                                 ).join('')
                                                 : '<span style="opacity:0.7;">Brak udziałów</span>'
                                             }
@@ -1447,7 +1524,7 @@ async def browse_receipts_page():
                     <p><strong>Adres:</strong> ${receipt.store_address}</p>
                     <p><strong>Kwota:</strong> ${receipt.final_price.toFixed(2)} PLN</p>
                     <p><strong>Rabaty:</strong> ${receipt.total_discounts.toFixed(2)} PLN</p>
-                    <p><strong>Zapłacił:</strong> ${receipt.user_name}</p>
+                    <p><strong>Zapłacił:</strong> ${lastClickedUserName || receipt.payer_name || receipt.payment_name}</p>
                     <p><strong>Status:</strong> 
                         ${receipt.counted ? 'Podliczony' : 'Niepodliczony'} / 
                         ${receipt.settled ? 'Rozliczony' : 'Nierozliczony'}
@@ -1476,12 +1553,88 @@ async def browse_receipts_page():
                 closeModal();
             }
         });
+        // --- MODAL podglądu wydatku manualnego ---
+        (function() {
+            // Dodaj modal do body jeśli nie istnieje
+            if (!document.getElementById('manual-expense-modal')) {
+                const manualExpenseModalHTML = `
+                <div id="manual-expense-modal" class="receipt-details-modal" style="display:none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Szczegóły wydatku</h2>
+                            <button class="close-btn" onclick="closeManualExpenseModal()">&times;</button>
+                        </div>
+                        <div class="modal-body" id="manual-modal-body">
+                            <!-- Zawartość będzie ładowana dynamicznie -->
+                        </div>
+                    </div>
+                </div>`;
+                document.body.insertAdjacentHTML('beforeend', manualExpenseModalHTML);
+            }
+
+            window.showManualExpenseDetails = async function(manualExpenseId) {
+                const modal = document.getElementById('manual-expense-modal');
+                const modalBody = document.getElementById('manual-modal-body');
+                modalBody.innerHTML = '<div class="loading"><div class="spinner"></div><p>Ładowanie szczegółów...</p></div>';
+                modal.style.display = 'block';
+                try {
+                    const response = await fetch(`/api/manual-expense-details/${manualExpenseId}`);
+                    const data = await response.json();
+                    if (response.ok) {
+                        modalBody.innerHTML = createManualExpenseDetailsHTML(data);
+                    } else {
+                        modalBody.innerHTML = '<div class="no-receipts"><p>Błąd: ' + (data.detail || 'Nieznany błąd') + '</p></div>';
+                    }
+                } catch (error) {
+                    modalBody.innerHTML = '<div class="no-receipts"><p>Błąd sieci: ' + error.message + '</p></div>';
+                }
+            };
+
+            function createManualExpenseDetailsHTML(data) {
+                const exp = data.manual_expense;
+                const shares = data.shares || [];
+                let sharesHTML = '';
+                if (shares.length > 0) {
+                    sharesHTML = `<h3>Podział (udziały):</h3><ul style='margin:0 0 16px 0;padding-left:18px;'>` +
+                        shares.map(s => `<li><strong>${s.user_name}</strong>: ${s.share.toFixed(1)}% (${s.amount.toFixed(2)} PLN)</li>`).join('') +
+                        '</ul>';
+                } else {
+                    sharesHTML = `<div style='opacity:0.7;'>Brak udziałów</div>`;
+                }
+                return `
+                    <div>
+                        <h3>Informacje o wydatku [ID: ${exp.manual_expense_id}]</h3>
+                        <p><strong>Data:</strong> ${exp.date}</p>
+                        <p><strong>Opis:</strong> ${exp.description}</p>
+                        <p><strong>Kategoria:</strong> ${exp.category}</p>
+                        <p><strong>Kwota:</strong> ${exp.total_cost.toFixed(2)} PLN</p>
+                        <p><strong>Zapłacił:</strong> ${exp.user_name}</p>
+                        <p><strong>Status:</strong> ${exp.counted ? 'Podliczony' : 'Niepodliczony'} / ${exp.settled ? 'Rozliczony' : 'Nierozliczony'}</p>
+                        ${sharesHTML}
+                    </div>
+                `;
+            }
+
+            window.closeManualExpenseModal = function() {
+                document.getElementById('manual-expense-modal').style.display = 'none';
+            };
+            // Zamknięcie modala po kliknięciu poza nim
+            document.addEventListener('click', function(e) {
+                const modal = document.getElementById('manual-expense-modal');
+                if (modal && modal.style.display === 'block' && e.target === modal) {
+                    closeManualExpenseModal();
+                }
+            });
+            // Zamknięcie modala klawiszem Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeManualExpenseModal();
+            });
+        })();
+        // --- KONIEC MODALA ---
         </script>
     </body>
     </html>
     """
-
-# API endpoints dla funkcji menu
 
 @app.get("/api/users")
 async def get_users():
@@ -1743,16 +1896,16 @@ async def browse_receipts(filter_type: str = "all"):
                    s.store_name, s.store_address, up.payment_name, u.name as user_name, u.user_id
             FROM receipts r
             JOIN stores s ON r.store_id = s.store_id
-            JOIN user_payments up ON r.payment_name = up.payment_name
-            JOIN users u ON up.user_id = u.user_id
+            LEFT JOIN user_payments up ON r.payment_name = up.payment_name
+            LEFT JOIN users u ON up.user_id = u.user_id
         """
         where = []
         if filter_type == "inne":
             where.append("(u.user_id = 100 OR lower(u.name) IN ('inny','other'))")
         else:
-            where.append("NOT (u.user_id = 100 OR lower(u.name) IN ('inny','other'))")
+            where.append("(u.user_id IS NULL OR NOT (u.user_id = 100 OR lower(u.name) IN ('inny','other')))")
             if filter_type == "counted":
-                where.append("r.counted = true")
+                where.append("r.counted = true AND r.settled = false")  # Podliczone, NIE rozliczone
             elif filter_type == "settled":
                 where.append("r.settled = true")
         query = base_query
@@ -1772,7 +1925,8 @@ async def browse_receipts(filter_type: str = "all"):
                 "store_name": row.store_name,
                 "store_address": row.store_address,
                 "payment_name": row.payment_name,
-                "user_name": row.user_name
+                "user_name": row.user_name or "Nieprzypisany",
+                "unassigned": not bool(row.payment_name)
             })
         return receipts
     finally:
@@ -1819,27 +1973,46 @@ async def get_receipt_details(receipt_id: int):
             ORDER BY product_id
         """)
         products_result = db.execute(products_query, {"receipt_id": receipt_id})
+        products_rows = products_result.fetchall()
+        product_names = [row[1] for row in products_rows]
+        # Pobierz static_shares dla wszystkich product_name jednym zapytaniem
+        if product_names:
+            static_shares_result = db.execute(
+                text(f"SELECT product_name, user_id, share FROM static_shares WHERE product_name IN ({','.join([':p'+str(i) for i in range(len(product_names))])})"),
+                {f"p{i}": name for i, name in enumerate(product_names)}
+            ).fetchall()
+            # Mapowanie: {product_name: [ {user_id, share}, ... ]}
+            static_shares_map = {}
+            for pname, uid, share in static_shares_result:
+                static_shares_map.setdefault(pname, []).append({"user_id": uid, "share": float(share)})
+        else:
+            static_shares_map = {}
         products = []
-        for row in products_result:
+        for row in products_rows:
             product_id = row[0]
+            product_name = row[1]
+            total_after_discount = float(row[8])
             # Pobierz udziały dla produktu
             shares = db.execute(text("SELECT user_id, share FROM shares WHERE product_id = :pid"), {"pid": product_id}).fetchall()
             shares_list = [
-                {"user_id": uid, "user_name": user_id_to_name.get(uid, str(uid)), "share": float(share)}
+                {"user_id": uid, "user_name": user_id_to_name.get(uid, str(uid)), "share": float(share), "amount": round(total_after_discount * float(share) / 100, 2)}
                 for uid, share in shares
             ]
+            # Pobierz static_share z mapy
+            static_share_list = static_shares_map.get(product_name, None)
             products.append({
                 "product_id": product_id,
-                "product_name": row[1],
+                "product_name": product_name,
                 "quantity": float(row[2]),
                 "unit_price_before": float(row[3]),
                 "total_price_before": float(row[4]),
                 "unit_discount": float(row[5]) if row[5] is not None else None,
                 "total_discount": float(row[6]) if row[6] is not None else None,
                 "unit_after_discount": float(row[7]) if row[7] is not None else None,
-                "total_after_discount": float(row[8]),
+                "total_after_discount": total_after_discount,
                 "tax_type": row[9],
-                "shares": shares_list
+                "shares": shares_list,
+                "static_share": static_share_list
             })
 
         # Pobierz rozliczenia (settlements)
@@ -1975,17 +2148,16 @@ async def count_receipt_detail(receipt_id: int):
             .user-header {{ font-size: 0.95em; color: #555; }}
             .error-msg {{ color: #dc3545; margin: 10px 0; }}
             .success-msg {{ color: #28a745; margin: 10px 0; }}
-            .btn {{ background: #007bff; color: #fff; border: none; border-radius: 4px; padding: 8px 18px; cursor: pointer; margin: 8px 0; }}
-            .btn:disabled {{ opacity: 0.7; cursor: not-allowed; }}
-            .btn-secondary {{ background: #6c757d; }}
-            .btn-secondary:hover {{ background: #495057; }}
-            .btn:hover {{ background: #0056b3; }}
+            .btn-save {{ background: #28a745; color: #fff; border: none; border-radius: 6px; padding: 14px 32px; font-size: 1.15em; font-weight: bold; cursor: pointer; margin: 18px 0 0 0; box-shadow: 0 2px 8px rgba(40,167,69,0.08); transition: background 0.2s; }}
+            .btn-save:hover {{ background: #218838; }}
+            .btn-set100 {{ background: #e9ecef; color: #007bff; border: none; border-radius: 4px; padding: 4px 10px; font-size: 0.95em; margin-left: 6px; cursor: pointer; transition: background 0.2s; }}
+            .btn-set100:hover {{ background: #d0e7ff; color: #0056b3; }}
             @media (max-width: 700px) {{ .container {{ padding: 8px; }} th, td {{ padding: 6px; }} }}
         </style>
     </head>
     <body>
         <div class='container'>
-            <a href='/count-receipts/' class='back-btn'>← Powrót</a>
+            <a href='/browse-receipts/' class='back-btn'>← Powrót</a>
             <h1>Podlicz paragon #{receipt_id}</h1>
             <div id='form-section'>
                 <div class='loading'>Ładowanie danych...</div>
@@ -2025,13 +2197,16 @@ async def count_receipt_detail(receipt_id: int):
                 if (staticShare) {{
                     staticShare.forEach(s => {{ staticMap[s.user_id] = s.share; }});
                 }}
-                // Przygotuj pola udziałów
+                // Przygotuj pola udziałów z przyciskami 100%
                 let shareInputs = mainUsers.map((u, ui) => {{
                     let val = staticMap[u.id] !== undefined ? staticMap[u.id] : 50;
-                    return `<td><input type='text' class='share-input' min='0' max='100' step='0.01' value='${{val}}' data-prod='${{pi}}' data-user='${{ui}}' oninput='onShareInput(event, ${{pi}}, ${{ui}})'></td>`;
+                    // Dodaj przycisk "100%" dla tego użytkownika
+                    return `<td style='white-space:nowrap;'><input type='text' class='share-input' min='0' max='100' step='0.01' value='${{val}}' data-prod='${{pi}}' data-user='${{ui}}' oninput='onShareInput(event, ${{pi}}, ${{ui}})'> <button type='button' class='btn-set100' onclick='set100ForUser(${{pi}}, ${{ui}})'>100%</button></td>`;
                 }}).join('');
                 // Podświetlenie wiersza jeśli static_share
                 let rowStyle = staticShare ? "background: #eaffea;" : "";
+                // Checkbox domyślnie zaznaczony jeśli static_share istnieje
+                let checked = staticShare ? "checked" : "";
                 return `
                 <tr style='${{rowStyle}}'>
                     <td>${{prod.product_name}}</td>
@@ -2039,7 +2214,7 @@ async def count_receipt_detail(receipt_id: int):
                     <td>${{prod.unit_price_before.toFixed(2)}} PLN</td>
                     <td>${{prod.total_after_discount.toFixed(2)}} PLN</td>
                     ${{shareInputs}}
-                    <td style='text-align:center;'><input type='checkbox' class='static-share-checkbox' data-prod='${{pi}}'></td>
+                    <td style='text-align:center;'><input type='checkbox' class='static-share-checkbox' data-prod='${{pi}}' ${{checked}}></td>
                 </tr>
                 `;
             }}).join('');
@@ -2058,13 +2233,9 @@ async def count_receipt_detail(receipt_id: int):
                             ${{tableRows}}
                         </tbody>
                     </table>
-                    <div style='margin: 18px 0;'>
-                        <button type='button' class='btn btn-secondary' onclick='setDefaultShares(50)'>Ustaw 50/50</button>
-                        <button type='button' class='btn btn-secondary' onclick='setDefaultShares(100)'>100% dla pierwszego</button>
-                    </div>
                     <div id='form-error' class='error-msg' style='display:none;'></div>
                     <div id='form-success' class='success-msg' style='display:none;'></div>
-                    <button type='submit' class='btn'>Zapisz udziały</button>
+                    <button type='submit' class='btn-save'>Zapisz udziały</button>
                 </form>
             `;
             // Add dynamic logic for shares
@@ -2082,28 +2253,14 @@ async def count_receipt_detail(receipt_id: int):
                     otherInput.value = otherVal;
                 }}
             }};
-        }}
-        function defaultShareValue(pi, ui) {{
-            // Always default to 50/50 for two users
-            return 50;
-        }}
-        function setDefaultShares(val) {{
-            document.querySelectorAll('.share-input').forEach(inp => {{
-                inp.value = val;
-            }});
-            updateSummary();
-        }}
-        function updateSummary() {{
-            products.forEach((prod, pi) => {{
-                let sum = 0;
-                users.forEach((u, ui) => {{
-                    const inp = document.querySelector(`.share-input[data-prod='${{pi}}'][data-user='${{ui}}']`);
-                    sum += parseFloat(inp.value) || 0;
-                }});
-                const cell = document.getElementById(`sum-prod-${{pi}}`);
-                cell.textContent = sum + '%';
-                cell.style.color = (sum === 100 ? '#28a745' : '#dc3545');
-            }});
+            // Funkcja do ustawiania 100% dla danego użytkownika i 0% dla drugiego
+            window.set100ForUser = function(pi, ui) {{
+                const input = document.querySelector(`.share-input[data-prod='${{pi}}'][data-user='${{ui}}']`);
+                const otherUi = ui === 0 ? 1 : 0;
+                const otherInput = document.querySelector(`.share-input[data-prod='${{pi}}'][data-user='${{otherUi}}']`);
+                if (input) input.value = 100;
+                if (otherInput) otherInput.value = 0;
+            }};
         }}
         async function submitShares(e) {{
             e.preventDefault();
@@ -2148,6 +2305,7 @@ async def count_receipt_detail(receipt_id: int):
                 if (resp.ok) {{
                     document.getElementById('form-success').textContent = 'Udziały zostały zapisane!';
                     document.getElementById('form-success').style.display = '';
+                    setTimeout(() => {{ window.location.href = '/browse-receipts/'; }}, 1000);
                 }} else {{
                     document.getElementById('form-error').textContent = result.detail || 'Błąd zapisu udziałów.';
                     document.getElementById('form-error').style.display = '';
@@ -2661,7 +2819,9 @@ async def assign_payments_page():
                     if (u) selectHtml += `<option value='${u.id}'>${u.name}</option>`;
                 });
                 selectHtml += '</select>';
-                div.innerHTML = `<span class='payment-name'>${item.payment_name}</span>
+                // Dodaj datę, sklep i final_price przed payment_name
+                let info = `<span style='color:#888;'>${item.date || ''} | ${item.store_name || ''} | ${item.final_price != null ? item.final_price.toFixed(2) + ' PLN' : ''}</span> `;
+                div.innerHTML = `${info}<span class='payment-name'>${item.payment_name || '<i>brak nazwy płatności</i>'}</span>
                     ${selectHtml}
                     <button class='assign-btn'>Przypisz</button>`;
                 const select = div.querySelector('select');
@@ -2699,12 +2859,18 @@ async def api_unassigned_payments():
     try:
         # payment_name z receipts, których nie ma w user_payments
         result = db.execute(text("""
-            SELECT DISTINCT r.payment_name
+            SELECT DISTINCT r.payment_name, r.date, s.store_name, r.final_price
             FROM receipts r
+            JOIN stores s ON r.store_id = s.store_id
             LEFT JOIN user_payments up ON r.payment_name = up.payment_name
             WHERE up.payment_name IS NULL
         """)).fetchall()
-        return [{"payment_name": row[0]} for row in result]
+        return [{
+            "payment_name": row[0],
+            "date": row[1].strftime("%Y-%m-%d") if row[1] else None,
+            "store_name": row[2],
+            "final_price": float(row[3]) if row[3] is not None else None
+        } for row in result]
     finally:
         db.close()
 
@@ -2715,10 +2881,18 @@ async def api_assign_payment(request: Request):
         data = await request.json()
         payment_name = data.get('payment_name')
         user_id = data.get('user_id')
-        if not payment_name or not user_id:
+        if not user_id:
             return JSONResponse({'detail': 'Brak danych.'}, status_code=400)
-        # Dodaj do user_payments
+        # Jeśli payment_name jest pusty, pobierz dowolne payment_name przypisane do user_id
+        if not payment_name:
+            row = db.execute(text("SELECT payment_name FROM user_payments WHERE user_id = :user_id LIMIT 1"), {"user_id": user_id}).fetchone()
+            if not row or not row[0]:
+                return JSONResponse({'detail': 'Wybrany użytkownik nie ma przypisanej żadnej nazwy płatności.'}, status_code=400)
+            payment_name = row[0]
+        # Dodaj do user_payments (jeśli nie istnieje)
         db.execute(text("INSERT INTO user_payments (user_id, payment_name) VALUES (:user_id, :payment_name) ON CONFLICT (payment_name) DO NOTHING"), {"user_id": user_id, "payment_name": payment_name})
+        # Przypisz payment_name do wszystkich paragonów z tym payment_name (jeśli dotyczy)
+        db.execute(text("UPDATE receipts SET payment_name = :payment_name WHERE payment_name IS NULL OR payment_name = ''"), {"payment_name": payment_name})
         db.commit()
         return {"message": "Przypisano."}
     except Exception as e:
@@ -2764,6 +2938,47 @@ async def upload_receipt(file: UploadFile = File(...)):
     except Exception as e:
         db.rollback()
         return JSONResponse({"detail": f"Błąd przetwarzania: {e}"}, status_code=500)
+    finally:
+        db.close()
+
+@app.get("/api/manual-expense-details/{manual_expense_id}")
+async def manual_expense_details(manual_expense_id: int):
+    db = SessionLocal()
+    try:
+        # Pobierz szczegóły wydatku manualnego
+        exp = db.execute(text("""
+            SELECT me.manual_expense_id, me.date, me.description, me.category, me.total_cost, me.counted, me.settled, u.name as user_name
+            FROM manual_expenses me
+            JOIN users u ON me.payer_user_id = u.user_id
+            WHERE me.manual_expense_id = :mid
+        """), {"mid": manual_expense_id}).fetchone()
+        if not exp:
+            return {"detail": "Nie znaleziono wydatku manualnego."}
+        manual_expense = {
+            "manual_expense_id": exp.manual_expense_id,
+            "date": exp.date.strftime("%Y-%m-%d") if exp.date else None,
+            "description": exp.description,
+            "category": exp.category,
+            "total_cost": float(exp.total_cost) if exp.total_cost is not None else 0,
+            "counted": exp.counted,
+            "settled": exp.settled,
+            "user_name": exp.user_name
+        }
+        # Pobierz powiązany produkt (wirtualny produkt dla udziałów)
+        prod = db.execute(text("SELECT product_id FROM products WHERE manual_expense_id = :mid"), {"mid": manual_expense_id}).fetchone()
+        shares = []
+        if prod:
+            product_id = prod.product_id
+            # Pobierz udziały
+            share_rows = db.execute(text("SELECT s.user_id, s.share, u.name FROM shares s JOIN users u ON s.user_id = u.user_id WHERE s.product_id = :pid"), {"pid": product_id}).fetchall()
+            for row in share_rows:
+                shares.append({
+                    "user_id": row.user_id,
+                    "user_name": row.name,
+                    "share": float(row.share),
+                    "amount": round(manual_expense["total_cost"] * float(row.share) / 100, 2)
+                })
+        return {"manual_expense": manual_expense, "shares": shares}
     finally:
         db.close()
 

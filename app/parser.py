@@ -17,6 +17,7 @@ from typing import Optional, Dict, Any, List
 import traceback
 import time
 from app.config import Config
+import pdfplumber
 
 os.makedirs('/app/logs', exist_ok=True)
 
@@ -44,6 +45,88 @@ REJECTED_FOLDER.mkdir(parents=True, exist_ok=True)
 
 # No more in-memory cache - using database as single source of truth
 
+def insert_pdf_receipt_to_db(data):
+    from app.db.session import SessionLocal
+    db = SessionLocal()
+    try:
+        logger.info(f'[PDF] Dane wejściowe do inserta: {data}')
+        # Walidacja wymaganych pól
+        required = ['store_name', 'store_city', 'store_address', 'postal_code', 'receipt_number', 'date', 'time', 'final_price', 'products']
+        for key in required:
+            if not data.get(key):
+                logger.error(f'[PDF] Brak wymaganego pola: {key} w danych PDF!')
+                return None
+        # --- NORMALIZACJA store_city ---
+        city_map = {
+            'POZNAN': 'POZNAŃ',
+            'LODZ': 'ŁÓDŹ',
+            'GDANSK': 'GDAŃSK',
+            'SZCZECIN': 'SZCZECIN',
+            'KATOWICE': 'KATOWICE',
+            # Dodaj inne miasta wg potrzeb
+        }
+        city = data['store_city']
+        if city:
+            city_up = city.upper()
+            data['store_city'] = city_map.get(city_up, city_up)
+        # --- WYSZUKIWANIE SKLEPU BEZ store_city ---
+        store_id = db.execute(text("SELECT store_id FROM stores WHERE store_name=:name AND store_address=:addr AND postal_code=:postal"), {"name": data['store_name'], "addr": data['store_address'], "postal": data['postal_code']}).scalar()
+        if not store_id:
+            db.execute(text("INSERT INTO stores (store_name, store_address, store_city, postal_code) VALUES (:name, :addr, :city, :postal)"), {"name": data['store_name'], "addr": data['store_address'], "city": data['store_city'], "postal": data['postal_code']})
+            store_id = db.execute(text("SELECT store_id FROM stores WHERE store_name=:name AND store_address=:addr AND postal_code=:postal"), {"name": data['store_name'], "addr": data['store_address'], "postal": data['postal_code']}).scalar()
+        # Sprawdź, czy taki paragon już istnieje
+        exists = db.execute(
+            text("""
+                SELECT 1 FROM receipts
+                WHERE date = :date
+                  AND final_price = :price
+            """),
+            {'date': data['date'], 'price': data['final_price']}
+        ).fetchone()
+        if exists:
+            logger.info('[PDF] Paragon już istnieje w bazie – pomijam.')
+            return 'DUPLICATE'
+        # Dodaj paragon
+        db.execute(text("""
+            INSERT INTO receipts (store_id, receipt_number, date, time, final_price, total_discounts, payment_name, counted, settled)
+            VALUES (:store_id, :receipt_number, :date, :time, :final_price, :total_discounts, :payment_name, FALSE, FALSE)
+        """), {
+            'store_id': store_id,
+            'receipt_number': data['receipt_number'],
+            'date': data['date'],
+            'time': data['time'],
+            'final_price': data['final_price'],
+            'total_discounts': data.get('total_discounts', 0.0),
+            'payment_name': data.get('payment_name', ''),
+        })
+        receipt_id = db.execute(text("SELECT receipt_id FROM receipts WHERE receipt_number=:nr AND date=:date AND store_id=:sid"), {'nr': data['receipt_number'], 'date': data['date'], 'sid': store_id}).scalar()
+        # Dodaj produkty zgodnie ze schematem bazy
+        for prod in data['products']:
+            db.execute(text("""
+                INSERT INTO products (receipt_id, product_name, quantity, tax_type, unit_price_before, total_price_before, unit_discount, total_discount, unit_after_discount, total_after_discount)
+                VALUES (:receipt_id, :product_name, :quantity, :tax_type, :unit_price_before, :total_price_before, :unit_discount, :total_discount, :unit_after_discount, :total_after_discount)
+            """), {
+                'receipt_id': receipt_id,
+                'product_name': prod.get('product_name', 'Nieznany'),
+                'quantity': prod.get('quantity', 1),
+                'tax_type': prod.get('tax_type', 'A'),
+                'unit_price_before': prod.get('unit_price_before', prod.get('total_after_discount', 0)),
+                'total_price_before': prod.get('total_price_before', prod.get('total_after_discount', 0)),
+                'unit_discount': prod.get('unit_discount', 0.0),
+                'total_discount': prod.get('total_discount', 0.0),
+                'unit_after_discount': prod.get('unit_after_discount', prod.get('unit_price_before', 0)),
+                'total_after_discount': prod.get('total_after_discount', 0),
+            })
+        db.commit()
+        logger.info(f'Dodano paragon PDF: {data["receipt_number"]} ({data["date"]})')
+        return receipt_id
+    except Exception as e:
+        db.rollback()
+        logger.error(f'Błąd przy dodawaniu paragonu PDF: {e}')
+        return None
+    finally:
+        db.close()
+
 def process_receipt_file(file_path: Path) -> Optional[int]:
     """Process a single receipt file with improved error handling and bulk operations.
     
@@ -56,53 +139,51 @@ def process_receipt_file(file_path: Path) -> Optional[int]:
     try:
         logger.info(f"Starting to process file: {file_path.name}")
         
+        if str(file_path).lower().endswith('.pdf'):
+            data = parse_biedronka_pdf(file_path)
+            return insert_pdf_receipt_to_db(data)
+
         # Read the JSON file
         with open(file_path, 'r', encoding='utf-8') as f:
             receipt_data = json.load(f)
 
-        # Extract receipt number from JSON data
+        # --- receipt_number z headerData -> docNumber ---
         receipt_number = ''
         try:
-            # Try to get receipt number from fiscalFooter
-            for item in receipt_data.get('body', []):
-                if 'fiscalFooter' in item:
-                    fiscal = item['fiscalFooter']
-                    bill_number = str(fiscal.get('billNumber', ''))
-                    if bill_number:
-                        receipt_number = bill_number
-                        logger.debug(f"Found receipt number in fiscal footer: {receipt_number}")
-                        break
-            
-            # If not found in fiscalFooter, try to get it from header data
+            for item in receipt_data.get('header', []):
+                if 'headerData' in item and 'docNumber' in item['headerData']:
+                    receipt_number = str(item['headerData']['docNumber'])
+                    logger.debug(f"Found receipt_number in headerData: {receipt_number}")
+                    break
+            # Fallback: inne metody tylko jeśli nie znaleziono docNumber
             if not receipt_number:
-                for item in receipt_data.get('header', []):
-                    if 'headerData' in item and 'docNumber' in item['headerData']:
-                        receipt_number = str(item['headerData']['docNumber'])
-                        logger.debug(f"Found receipt number in header data: {receipt_number}")
-                        break
-            
-            # If still not found, try to get it from the transaction number
-            if not receipt_number:
+                # Try to get receipt number from fiscalFooter
                 for item in receipt_data.get('body', []):
-                    if 'addLine' in item and 'data' in item['addLine']:
-                        match = re.search(r'Nr transakcji:\s*<span[^>]*>(\d+)<', item['addLine']['data'])
-                        if match:
-                            receipt_number = match.group(1)
-                            logger.debug(f"Found transaction number: {receipt_number}")
+                    if 'fiscalFooter' in item:
+                        fiscal = item['fiscalFooter']
+                        bill_number = str(fiscal.get('billNumber', ''))
+                        if bill_number:
+                            receipt_number = bill_number
+                            logger.debug(f"Found receipt number in fiscal footer: {receipt_number}")
                             break
-            
+                # If still not found, try to get it from the transaction number
+                if not receipt_number:
+                    for item in receipt_data.get('body', []):
+                        if 'addLine' in item and 'data' in item['addLine']:
+                            match = re.search(r'Nr transakcji:\s*<span[^>]*>(\d+)<', item['addLine']['data'])
+                            if match:
+                                receipt_number = match.group(1)
+                                logger.debug(f"Found transaction number: {receipt_number}")
+                                break
             # If still no receipt number, use a timestamp as fallback
             if not receipt_number:
                 receipt_number = str(int(time.time()))
                 logger.warning(f"Could not find receipt number in data, using timestamp: {receipt_number}")
-            
             logger.info(f"Using receipt number: {receipt_number}")
-            
         except Exception as e:
             logger.error(f"Error extracting receipt number: {e}")
             receipt_number = str(int(time.time()))
             logger.warning(f"Generated fallback receipt number: {receipt_number}")
-        
         # Store the receipt number in the receipt data
         receipt_data['receiptNumber'] = receipt_number
 
@@ -157,13 +238,21 @@ def process_receipt_file(file_path: Path) -> Optional[int]:
             with transaction_scope() as db:
                 from app.db.duplicate_check import is_duplicate_receipt
                 duplicate_data = {
+                    'receipt_number': receipt_header.get('receipt_number'),
                     'date': receipt_header.get('date'),
-                    'time': receipt_header.get('time'),
                     'final_price': receipt_header.get('final_price')
                 }
-                is_dup = is_duplicate_receipt(db, duplicate_data)
+                # Nowa logika: receipt_number, date, final_price
+                is_dup = db.execute(
+                    text("""
+                        SELECT 1 FROM receipts
+                        WHERE date = :date
+                          AND final_price = :price
+                    """),
+                    {'date': duplicate_data['date'], 'price': duplicate_data['final_price']}
+                ).fetchone()
                 if is_dup:
-                    logger.info(f"[SKIP] Duplicate receipt detected - Date: {duplicate_data['date']}, Time: {duplicate_data['time']}, Final Price: {duplicate_data['final_price']}")
+                    logger.info(f"[SKIP] Duplicate receipt detected - Receipt Number: {duplicate_data['receipt_number']}, Date: {duplicate_data['date']}, Final Price: {duplicate_data['final_price']}")
                     print(f"ℹ️ Receipt was skipped (DUPLICATE)")
                     _move_file_to_folder(file_path, PARSED_FOLDER)
                     return None
@@ -281,11 +370,18 @@ def process_receipt_data(receipt_data: dict) -> int:
     with transaction_scope() as db:
         from app.db.duplicate_check import is_duplicate_receipt
         duplicate_data = {
+            'receipt_number': receipt_header.get('receipt_number'),
             'date': receipt_header.get('date'),
-            'time': receipt_header.get('time'),
             'final_price': receipt_header.get('final_price')
         }
-        is_dup = is_duplicate_receipt(db, duplicate_data)
+        is_dup = db.execute(
+            text("""
+                SELECT 1 FROM receipts
+                WHERE date = :date
+                  AND final_price = :price
+            """),
+            {'date': duplicate_data['date'], 'price': duplicate_data['final_price']}
+        ).fetchone()
         if is_dup:
             raise ValueError("Paragon już istnieje w bazie (duplikat)")
         # Zapisz payment_name, nawet jeśli nie ma user_id
@@ -705,6 +801,166 @@ def parse_receipt(receipt_data: Dict[str, Any]) -> Dict[str, Any]:
         products.append(pending_product)
     receipt['products'] = products
     return receipt
+
+# W parse_biedronka_pdf, po wyciągnięciu store_city, zawsze zamieniam POZNAN->POZNAŃ itd.
+def parse_biedronka_pdf(file_path):
+    import pdfplumber
+    import re
+    from datetime import datetime
+    text = ''
+    with pdfplumber.open(file_path) as pdf:
+        text = "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
+        if not text.strip():
+            try:
+                import pytesseract
+                from PIL import Image
+                ocr_texts = []
+                for page in pdf.pages:
+                    img = page.to_image(resolution=300).original
+                    ocr_text = pytesseract.image_to_string(img, lang='pol')
+                    ocr_texts.append(ocr_text)
+                text = "\n".join(ocr_texts)
+                logger.info('[PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.')
+            except Exception as ocr_err:
+                logger.error(f'[PDF][OCR] Błąd OCR: {ocr_err}')
+    logger.info(f'[PDF] Tekst z PDF:\n{text}')
+
+    naglowek_pat = re.compile(
+        r'^(BIEDRONKA.*?)\n'
+        r'([0-9]{2}-[0-9]{3})\s+([A-ZĄĆĘŁŃÓŚŹŻ]+)\s+(UL\.\s*[A-ZĄĆĘŁŃÓŚŹŻ0-9\s]+)\n'
+        r'(.*?)\n'
+        r'(.*?)\n'
+        r'NIP\s*(\d+)', re.DOTALL | re.MULTILINE
+    )
+    m = naglowek_pat.search(text)
+    if m:
+        store_name = "BIEDRONKA"
+        postal_code = m.group(2)
+        store_city = m.group(3)
+        # --- NORMALIZACJA store_city ---
+        city_map = {
+            'POZNAN': 'POZNAŃ',
+            'LODZ': 'ŁÓDŹ',
+            'GDANSK': 'GDAŃSK',
+            'SZCZECIN': 'SZCZECIN',
+            'KATOWICE': 'KATOWICE',
+            # Dodaj inne miasta wg potrzeb
+        }
+        store_city = city_map.get(store_city.upper(), store_city.upper())
+        store_address = m.group(4).strip()
+        nip = m.group(7)
+    else:
+        store_name = None
+        store_city = None
+        store_address = None
+        postal_code = None
+        nip = None
+
+    # Numer paragonu
+    nr_paragonu = None
+    m = re.search(r'nr:\s*(\d+)', text)
+    if m:
+        nr_paragonu = m.group(1)
+    else:
+        m = re.search(r'Numer transakcji\s*(\d+)', text)
+        if m:
+            nr_paragonu = m.group(1)
+
+    # Data/godzina
+    data_pat = re.search(r'Data[:\s]+(\d{2}/\d{2}/\d{4})[ T]+(\d{2}:\d{2}:\d{2})', text)
+    date_str, time_str = None, None
+    if data_pat:
+        date_str = datetime.strptime(data_pat.group(1), "%d/%m/%Y").strftime("%Y-%m-%d")
+        time_str = data_pat.group(2)
+
+    # Suma PLN
+    suma_pat = re.search(r'Suma PLN\s*([\d,\.]+)', text)
+    suma_pln = float(suma_pat.group(1).replace(',', '.')) if suma_pat else None
+
+    # Rabaty
+    rabaty_pat = re.search(r'Udzielono łącznie rabatów:\s*([\d,\.]+)', text)
+    rabaty_kwota = float(rabaty_pat.group(1).replace(',', '.')) if rabaty_pat else 0.0
+
+    # Produkty (jak poprzednio)
+    produkty = []
+    prod_section = re.search(r'PARAGON FISKALNY(.*?)Udzielono łącznie rabatów', text, re.DOTALL)
+    if prod_section:
+        lines = prod_section.group(1).split('\n')
+        for line in lines:
+            m = re.match(r'^(.*?)\s+([A-Za-z])[^\d-]*(\d+)x\s*([\d,\.]+)\s+([\d,\.]+)', line)
+            if m:
+                nazwa = m.group(1).strip()
+                ptu = m.group(2).upper()
+                ilosc = int(m.group(3))
+                cena = float(m.group(4).replace(',', '.'))
+                wartosc = float(m.group(5).replace(',', '.'))
+                produkty.append({
+                    'product_name': nazwa,
+                    'tax_type': ptu,
+                    'quantity': ilosc,
+                    'unit_price_before': cena,
+                    'total_price_before': round(cena * ilosc, 2),
+                    'unit_discount': 0.0,
+                    'total_discount': 0.0,
+                    'unit_after_discount': cena,
+                    'total_after_discount': wartosc,
+                })
+            elif 'Opust' in line and produkty:
+                m = re.search(r'Opust.*?(-?[\d,\.]+)', line)
+                if m:
+                    produkty[-1]['total_discount'] = float(m.group(1).replace(',', '.'))
+                    produkty[-1]['unit_discount'] = round(produkty[-1]['total_discount'] / produkty[-1]['quantity'], 2)
+                    produkty[-1]['unit_after_discount'] = round(produkty[-1]['unit_price_before'] - produkty[-1]['unit_discount'], 2)
+                    produkty[-1]['total_after_discount'] = round(produkty[-1]['total_price_before'] - produkty[-1]['total_discount'], 2)
+
+    payment_name = ''
+
+    return {
+        'store_name': store_name,
+        'store_city': store_city,
+        'store_address': store_address,
+        'postal_code': postal_code,
+        'nip': nip,
+        'receipt_number': nr_paragonu,
+        'date': date_str,
+        'time': time_str,
+        'final_price': suma_pln,
+        'total_discounts': rabaty_kwota,
+        'payment_name': payment_name,
+        'products': produkty,
+    }
+
+def process_pdf_file(content: bytes, filename: str):
+    """
+    Zapisuje PDF do pliku tymczasowego, parsuje go i wrzuca do bazy, usuwa plik tymczasowy.
+    Args:
+        content: zawartość pliku PDF jako bajty
+        filename: oryginalna nazwa pliku (do logów)
+    Raises:
+        Exception jeśli parsowanie lub zapis się nie powiedzie
+    """
+    import tempfile
+    import os
+    temp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp:
+            tmp.write(content)
+            temp_path = tmp.name
+        logger.info(f"[PDF] Zapisano plik tymczasowy: {temp_path} (oryginalnie: {filename})")
+        data = parse_biedronka_pdf(temp_path)
+        if not data:
+            raise Exception("Nie udało się sparsować PDF (brak danych)")
+        receipt_id = insert_pdf_receipt_to_db(data)
+        if receipt_id == 'DUPLICATE':
+            raise Exception("Paragon już istnieje w bazie (duplikat)")
+        if not receipt_id:
+            raise Exception("Nie udało się zapisać paragonu PDF do bazy")
+        logger.info(f"[PDF] Paragon PDF zapisany do bazy (ID: {receipt_id})")
+        return receipt_id
+    finally:
+        if temp_path and os.path.exists(temp_path):
+            os.remove(temp_path)
+            logger.info(f"[PDF] Usunięto plik tymczasowy: {temp_path}")
 
 def main():
     logger.info("Starting receipt parsing process.")

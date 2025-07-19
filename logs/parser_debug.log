@@ -636,3 +636,894 @@
 2025-07-15 21:54:37,860 INFO === Parser module imported: log file creation test ===
 2025-07-15 22:02:13,841 INFO === Parser module imported: log file creation test ===
 2025-07-16 10:44:54,354 INFO === Parser module imported: log file creation test ===
+2025-07-17 07:57:49,515 INFO === Parser module imported: log file creation test ===
+2025-07-17 08:29:00,107 INFO === Parser module imported: log file creation test ===
+2025-07-17 09:02:35,560 INFO === Parser module imported: log file creation test ===
+2025-07-17 09:27:53,242 INFO === Parser module imported: log file creation test ===
+2025-07-17 09:39:31,210 INFO === Parser module imported: log file creation test ===
+2025-07-17 09:51:22,975 INFO === Parser module imported: log file creation test ===
+2025-07-17 12:03:11,971 INFO === Parser module imported: log file creation test ===
+2025-07-17 13:44:13,859 INFO === Parser module imported: log file creation test ===
+2025-07-17 14:00:26,182 INFO === Parser module imported: log file creation test ===
+2025-07-17 14:00:42,349 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmp2qaqdygu.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 14:00:42,596 ERROR Błąd przy dodawaniu paragonu PDF: (psycopg2.errors.UndefinedColumn) column "store_name" does not exist
+LINE 5:                   AND store_name = NULL
+                              ^
+
+[SQL: 
+                SELECT 1 FROM receipts
+                WHERE receipt_number = %(nr)s
+                  AND date = %(date)s
+                  AND store_name = %(store)s
+                  AND final_price = %(price)s
+            ]
+[parameters: {'nr': None, 'date': None, 'store': None, 'price': None}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-07-17 14:00:42,597 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmp2qaqdygu.pdf
+2025-07-17 14:07:54,024 INFO === Parser module imported: log file creation test ===
+2025-07-17 14:08:13,766 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmp8rn7yf7e.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 14:08:13,773 INFO [PDF] Dane wejściowe do inserta: {'store_name': None, 'store_address': None, 'nip': None, 'receipt_number': None, 'date': None, 'time': None, 'final_price': None, 'total_discounts': 0.0, 'payment_name': '', 'products': []}
+2025-07-17 14:08:13,774 ERROR [PDF] Brak wymaganego pola: store_name w danych PDF!
+2025-07-17 14:08:13,776 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmp8rn7yf7e.pdf
+2025-07-17 14:21:16,296 INFO === Parser module imported: log file creation test ===
+2025-07-17 14:21:35,905 INFO === Parser module imported: log file creation test ===
+2025-07-17 14:22:25,679 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmpt5v7xl6y.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 14:22:25,682 INFO [PDF] Tekst z PDF:
+
+2025-07-17 14:22:25,683 INFO [PDF] Dane wejściowe do inserta: {'store_name': None, 'store_address': None, 'nip': None, 'receipt_number': None, 'date': None, 'time': None, 'final_price': None, 'total_discounts': 0.0, 'payment_name': '', 'products': []}
+2025-07-17 14:22:25,683 ERROR [PDF] Brak wymaganego pola: store_name w danych PDF!
+2025-07-17 14:22:25,683 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmpt5v7xl6y.pdf
+2025-07-17 14:47:33,366 INFO === Parser module imported: log file creation test ===
+2025-07-17 14:51:36,305 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmpya91it37.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 14:51:36,893 ERROR [PDF][OCR] Błąd OCR: tesseract is not installed or it's not in your PATH. See README file for more information.
+2025-07-17 14:51:36,895 INFO [PDF] Tekst z PDF:
+
+2025-07-17 14:51:36,898 INFO [PDF] Dane wejściowe do inserta: {'store_name': None, 'store_address': None, 'nip': None, 'receipt_number': None, 'date': None, 'time': None, 'final_price': None, 'total_discounts': 0.0, 'payment_name': '', 'products': []}
+2025-07-17 14:51:36,899 ERROR [PDF] Brak wymaganego pola: store_name w danych PDF!
+2025-07-17 14:51:36,900 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmpya91it37.pdf
+2025-07-17 15:03:52,395 INFO === Parser module imported: log file creation test ===
+2025-07-17 15:26:00,335 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmpu9915qqj.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 15:26:02,495 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-17 15:26:02,496 INFO [PDF] Tekst z PDF:
+BIEDRONKA "CODZIENNIE NISKIE CENY" 7565
+60-649 POZNAN UL. PIĄTKOWSKA 78C
+JERONIMO MARTINS POLSKA S.A.
+62-025 KOSTRZYN UL.ZNIWNA 5
+NIP 7791011327
+
+nr: 245063
+PARAGON FISKALNY
+Nazwa PTU Ilość Cena Wartość
+MydłoPłLindeChamomil A 2x 6,49 12,98
+Opust -3,00
+Szynka Mix 100g C 1x 7,29 7,29
+Opust -2,30
+Szynka Mix 100g c 1x 7,29 7,29
+Opust -2,30
+LasagneDonat 1000g c 3x 18,99 56,97
+Opust -9,00
+SerTwarChuDeli250g (e) 3x 3,66 10,98
+ŚM PRIM 30 ZOT200G c 2x 4,59 9,18
+Opust -3,20
+BułkaŚniPełnoz73g c 4x 1,29 5,16
+Opust -0,56
+Udzielono łącznie rabatów: 20,36
+Sprzedaż opodatkowana A 9,98
+Sprzedaż opodatkowana C 79,51
+PTU A 23% 1,87
+PTU C 5% 3,79
+Suma PTU 5,66
+Suma PLN 89,49
+Karta płatnicza 89,49
+Numer transakcji 9500
+Numer 7565250513950013
+Numer kasy 13
+Numer kasjera 5
+Data 13/05/2025 17:45:36
+CBB182E7520B47BA8565A3F531CFB8331B45842C
+FEAZ2202152598
+
+1000075659500195913627
+
+Numer karty: 99583**"**293
+
+
+2025-07-17 15:26:02,503 INFO [PDF] Dane wejściowe do inserta: {'store_name': '60-649 POZNAN UL. PIĄTKOWSKA 78C', 'store_address': 'JERONIMO MARTINS POLSKA S.A.', 'nip': '7791011327', 'receipt_number': '245063', 'date': '2025-05-13', 'time': '17:45:36', 'final_price': 89.49, 'total_discounts': 20.36, 'payment_name': '', 'products': []}
+2025-07-17 15:26:02,504 ERROR [PDF] Brak wymaganego pola: products w danych PDF!
+2025-07-17 15:26:02,504 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmpu9915qqj.pdf
+2025-07-17 15:29:39,388 INFO === Parser module imported: log file creation test ===
+2025-07-17 15:49:49,484 INFO === Parser module imported: log file creation test ===
+2025-07-17 15:50:38,484 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmpdsqqym4y.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 15:50:41,053 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-17 15:50:41,054 INFO [PDF] Tekst z PDF:
+BIEDRONKA "CODZIENNIE NISKIE CENY" 7565
+60-649 POZNAN UL. PIĄTKOWSKA 78C
+JERONIMO MARTINS POLSKA S.A.
+62-025 KOSTRZYN UL.ZNIWNA 5
+NIP 7791011327
+
+nr: 245063
+PARAGON FISKALNY
+Nazwa PTU Ilość Cena Wartość
+MydłoPłLindeChamomil A 2x 6,49 12,98
+Opust -3,00
+Szynka Mix 100g C 1x 7,29 7,29
+Opust -2,30
+Szynka Mix 100g c 1x 7,29 7,29
+Opust -2,30
+LasagneDonat 1000g c 3x 18,99 56,97
+Opust -9,00
+SerTwarChuDeli250g (e) 3x 3,66 10,98
+ŚM PRIM 30 ZOT200G c 2x 4,59 9,18
+Opust -3,20
+BułkaŚniPełnoz73g c 4x 1,29 5,16
+Opust -0,56
+Udzielono łącznie rabatów: 20,36
+Sprzedaż opodatkowana A 9,98
+Sprzedaż opodatkowana C 79,51
+PTU A 23% 1,87
+PTU C 5% 3,79
+Suma PTU 5,66
+Suma PLN 89,49
+Karta płatnicza 89,49
+Numer transakcji 9500
+Numer 7565250513950013
+Numer kasy 13
+Numer kasjera 5
+Data 13/05/2025 17:45:36
+CBB182E7520B47BA8565A3F531CFB8331B45842C
+FEAZ2202152598
+
+1000075659500195913627
+
+Numer karty: 99583**"**293
+
+
+2025-07-17 15:50:41,071 INFO [PDF] Dane wejściowe do inserta: {'store_name': '60-649 POZNAN UL. PIĄTKOWSKA 78C', 'store_address': 'JERONIMO MARTINS POLSKA S.A.', 'nip': '7791011327', 'receipt_number': '245063', 'date': '2025-05-13', 'time': '17:45:36', 'final_price': 89.49, 'total_discounts': 20.36, 'payment_name': '', 'products': [{'product_name': 'MydłoPłLindeChamomil', 'tax_type': 'A', 'quantity': 2, 'unit_price_before': 6.49, 'total_price_before': 12.98, 'unit_discount': -1.5, 'total_discount': -3.0, 'unit_after_discount': 7.99, 'total_after_discount': 15.98}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'LasagneDonat 1000g', 'tax_type': 'C', 'quantity': 3, 'unit_price_before': 18.99, 'total_price_before': 56.97, 'unit_discount': -3.0, 'total_discount': -9.0, 'unit_after_discount': 21.99, 'total_after_discount': 65.97}, {'product_name': 'ŚM PRIM 30 ZOT200G', 'tax_type': 'C', 'quantity': 2, 'unit_price_before': 4.59, 'total_price_before': 9.18, 'unit_discount': -1.6, 'total_discount': -3.2, 'unit_after_discount': 6.19, 'total_after_discount': 12.38}, {'product_name': 'BułkaŚniPełnoz73g', 'tax_type': 'C', 'quantity': 4, 'unit_price_before': 1.29, 'total_price_before': 5.16, 'unit_discount': -0.14, 'total_discount': -0.56, 'unit_after_discount': 1.43, 'total_after_discount': 5.72}]}
+2025-07-17 15:50:42,351 INFO Dodano paragon PDF: 245063 (2025-05-13)
+2025-07-17 15:50:42,351 INFO [PDF] Paragon PDF zapisany do bazy (ID: 72)
+2025-07-17 15:50:42,352 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmpdsqqym4y.pdf
+2025-07-17 16:08:25,418 INFO === Parser module imported: log file creation test ===
+2025-07-17 16:08:52,337 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmpetxaahoe.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 16:08:54,015 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-17 16:08:54,016 INFO [PDF] Tekst z PDF:
+BIEDRONKA "CODZIENNIE NISKIE CENY" 7565
+60-649 POZNAN UL. PIĄTKOWSKA 78C
+JERONIMO MARTINS POLSKA S.A.
+62-025 KOSTRZYN UL.ZNIWNA 5
+NIP 7791011327
+
+nr: 245063
+PARAGON FISKALNY
+Nazwa PTU Ilość Cena Wartość
+MydłoPłLindeChamomil A 2x 6,49 12,98
+Opust -3,00
+Szynka Mix 100g C 1x 7,29 7,29
+Opust -2,30
+Szynka Mix 100g c 1x 7,29 7,29
+Opust -2,30
+LasagneDonat 1000g c 3x 18,99 56,97
+Opust -9,00
+SerTwarChuDeli250g (e) 3x 3,66 10,98
+ŚM PRIM 30 ZOT200G c 2x 4,59 9,18
+Opust -3,20
+BułkaŚniPełnoz73g c 4x 1,29 5,16
+Opust -0,56
+Udzielono łącznie rabatów: 20,36
+Sprzedaż opodatkowana A 9,98
+Sprzedaż opodatkowana C 79,51
+PTU A 23% 1,87
+PTU C 5% 3,79
+Suma PTU 5,66
+Suma PLN 89,49
+Karta płatnicza 89,49
+Numer transakcji 9500
+Numer 7565250513950013
+Numer kasy 13
+Numer kasjera 5
+Data 13/05/2025 17:45:36
+CBB182E7520B47BA8565A3F531CFB8331B45842C
+FEAZ2202152598
+
+1000075659500195913627
+
+Numer karty: 99583**"**293
+
+
+2025-07-17 16:08:54,038 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmpetxaahoe.pdf
+2025-07-17 16:20:54,293 INFO === Parser module imported: log file creation test ===
+2025-07-17 16:21:25,226 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmp2gds5e4c.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 16:21:27,382 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-17 16:21:27,383 INFO [PDF] Tekst z PDF:
+BIEDRONKA "CODZIENNIE NISKIE CENY" 7565
+60-649 POZNAN UL. PIĄTKOWSKA 78C
+JERONIMO MARTINS POLSKA S.A.
+62-025 KOSTRZYN UL.ZNIWNA 5
+NIP 7791011327
+
+nr: 245063
+PARAGON FISKALNY
+Nazwa PTU Ilość Cena Wartość
+MydłoPłLindeChamomil A 2x 6,49 12,98
+Opust -3,00
+Szynka Mix 100g C 1x 7,29 7,29
+Opust -2,30
+Szynka Mix 100g c 1x 7,29 7,29
+Opust -2,30
+LasagneDonat 1000g c 3x 18,99 56,97
+Opust -9,00
+SerTwarChuDeli250g (e) 3x 3,66 10,98
+ŚM PRIM 30 ZOT200G c 2x 4,59 9,18
+Opust -3,20
+BułkaŚniPełnoz73g c 4x 1,29 5,16
+Opust -0,56
+Udzielono łącznie rabatów: 20,36
+Sprzedaż opodatkowana A 9,98
+Sprzedaż opodatkowana C 79,51
+PTU A 23% 1,87
+PTU C 5% 3,79
+Suma PTU 5,66
+Suma PLN 89,49
+Karta płatnicza 89,49
+Numer transakcji 9500
+Numer 7565250513950013
+Numer kasy 13
+Numer kasjera 5
+Data 13/05/2025 17:45:36
+CBB182E7520B47BA8565A3F531CFB8331B45842C
+FEAZ2202152598
+
+1000075659500195913627
+
+Numer karty: 99583**"**293
+
+
+2025-07-17 16:21:27,390 INFO [PDF] Dane wejściowe do inserta: {'store_name': 'BIEDRONKA', 'store_city': 'Poznan', 'store_address': 'PIĄTKOWSKA 78C', 'postal_code': '60-649', 'nip': '7791011327', 'receipt_number': '245063', 'date': '2025-05-13', 'time': '17:45:36', 'final_price': 89.49, 'total_discounts': 20.36, 'payment_name': '', 'products': [{'product_name': 'MydłoPłLindeChamomil', 'tax_type': 'A', 'quantity': 2, 'unit_price_before': 6.49, 'total_price_before': 12.98, 'unit_discount': -1.5, 'total_discount': -3.0, 'unit_after_discount': 7.99, 'total_after_discount': 15.98}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'LasagneDonat 1000g', 'tax_type': 'C', 'quantity': 3, 'unit_price_before': 18.99, 'total_price_before': 56.97, 'unit_discount': -3.0, 'total_discount': -9.0, 'unit_after_discount': 21.99, 'total_after_discount': 65.97}, {'product_name': 'ŚM PRIM 30 ZOT200G', 'tax_type': 'C', 'quantity': 2, 'unit_price_before': 4.59, 'total_price_before': 9.18, 'unit_discount': -1.6, 'total_discount': -3.2, 'unit_after_discount': 6.19, 'total_after_discount': 12.38}, {'product_name': 'BułkaŚniPełnoz73g', 'tax_type': 'C', 'quantity': 4, 'unit_price_before': 1.29, 'total_price_before': 5.16, 'unit_discount': -0.14, 'total_discount': -0.56, 'unit_after_discount': 1.43, 'total_after_discount': 5.72}]}
+2025-07-17 16:21:28,964 INFO Dodano paragon PDF: 245063 (2025-05-13)
+2025-07-17 16:21:28,965 INFO [PDF] Paragon PDF zapisany do bazy (ID: 73)
+2025-07-17 16:21:28,966 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmp2gds5e4c.pdf
+2025-07-17 16:56:21,360 INFO === Parser module imported: log file creation test ===
+2025-07-17 16:57:21,619 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmphcv11y46.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 16:57:23,668 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-17 16:57:23,668 INFO [PDF] Tekst z PDF:
+BIEDRONKA "CODZIENNIE NISKIE CENY" 7565
+60-649 POZNAN UL. PIĄTKOWSKA 78C
+JERONIMO MARTINS POLSKA S.A.
+62-025 KOSTRZYN UL.ZNIWNA 5
+NIP 7791011327
+
+nr: 245063
+PARAGON FISKALNY
+Nazwa PTU Ilość Cena Wartość
+MydłoPłLindeChamomil A 2x 6,49 12,98
+Opust -3,00
+Szynka Mix 100g C 1x 7,29 7,29
+Opust -2,30
+Szynka Mix 100g c 1x 7,29 7,29
+Opust -2,30
+LasagneDonat 1000g c 3x 18,99 56,97
+Opust -9,00
+SerTwarChuDeli250g (e) 3x 3,66 10,98
+ŚM PRIM 30 ZOT200G c 2x 4,59 9,18
+Opust -3,20
+BułkaŚniPełnoz73g c 4x 1,29 5,16
+Opust -0,56
+Udzielono łącznie rabatów: 20,36
+Sprzedaż opodatkowana A 9,98
+Sprzedaż opodatkowana C 79,51
+PTU A 23% 1,87
+PTU C 5% 3,79
+Suma PTU 5,66
+Suma PLN 89,49
+Karta płatnicza 89,49
+Numer transakcji 9500
+Numer 7565250513950013
+Numer kasy 13
+Numer kasjera 5
+Data 13/05/2025 17:45:36
+CBB182E7520B47BA8565A3F531CFB8331B45842C
+FEAZ2202152598
+
+1000075659500195913627
+
+Numer karty: 99583**"**293
+
+
+2025-07-17 16:57:23,676 INFO [PDF] Dane wejściowe do inserta: {'store_name': 'BIEDRONKA', 'store_city': 'POZNAN', 'store_address': 'UL. PIĄTKOWSKA 78C', 'postal_code': '60-649', 'nip': '7791011327', 'receipt_number': '245063', 'date': '2025-05-13', 'time': '17:45:36', 'final_price': 89.49, 'total_discounts': 20.36, 'payment_name': '', 'products': [{'product_name': 'MydłoPłLindeChamomil', 'tax_type': 'A', 'quantity': 2, 'unit_price_before': 6.49, 'total_price_before': 12.98, 'unit_discount': -1.5, 'total_discount': -3.0, 'unit_after_discount': 7.99, 'total_after_discount': 15.98}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'LasagneDonat 1000g', 'tax_type': 'C', 'quantity': 3, 'unit_price_before': 18.99, 'total_price_before': 56.97, 'unit_discount': -3.0, 'total_discount': -9.0, 'unit_after_discount': 21.99, 'total_after_discount': 65.97}, {'product_name': 'ŚM PRIM 30 ZOT200G', 'tax_type': 'C', 'quantity': 2, 'unit_price_before': 4.59, 'total_price_before': 9.18, 'unit_discount': -1.6, 'total_discount': -3.2, 'unit_after_discount': 6.19, 'total_after_discount': 12.38}, {'product_name': 'BułkaŚniPełnoz73g', 'tax_type': 'C', 'quantity': 4, 'unit_price_before': 1.29, 'total_price_before': 5.16, 'unit_discount': -0.14, 'total_discount': -0.56, 'unit_after_discount': 1.43, 'total_after_discount': 5.72}]}
+2025-07-17 16:57:24,112 ERROR Błąd przy dodawaniu paragonu PDF: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "stores_store_name_store_address_postal_code_key"
+DETAIL:  Key (store_name, store_address, postal_code)=(BIEDRONKA, UL. PIĄTKOWSKA 78C, 60-649) already exists.
+
+[SQL: INSERT INTO stores (store_name, store_address, store_city, postal_code) VALUES (%(name)s, %(addr)s, %(city)s, %(postal)s)]
+[parameters: {'name': 'BIEDRONKA', 'addr': 'UL. PIĄTKOWSKA 78C', 'city': 'POZNAN', 'postal': '60-649'}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-07-17 16:57:24,113 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmphcv11y46.pdf
+2025-07-17 17:03:44,702 INFO === Parser module imported: log file creation test ===
+2025-07-17 17:04:31,144 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmprzlmqire.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 17:04:32,691 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-17 17:04:32,692 INFO [PDF] Tekst z PDF:
+BIEDRONKA "CODZIENNIE NISKIE CENY" 7565
+60-649 POZNAN UL. PIĄTKOWSKA 78C
+JERONIMO MARTINS POLSKA S.A.
+62-025 KOSTRZYN UL.ZNIWNA 5
+NIP 7791011327
+
+nr: 245063
+PARAGON FISKALNY
+Nazwa PTU Ilość Cena Wartość
+MydłoPłLindeChamomil A 2x 6,49 12,98
+Opust -3,00
+Szynka Mix 100g C 1x 7,29 7,29
+Opust -2,30
+Szynka Mix 100g c 1x 7,29 7,29
+Opust -2,30
+LasagneDonat 1000g c 3x 18,99 56,97
+Opust -9,00
+SerTwarChuDeli250g (e) 3x 3,66 10,98
+ŚM PRIM 30 ZOT200G c 2x 4,59 9,18
+Opust -3,20
+BułkaŚniPełnoz73g c 4x 1,29 5,16
+Opust -0,56
+Udzielono łącznie rabatów: 20,36
+Sprzedaż opodatkowana A 9,98
+Sprzedaż opodatkowana C 79,51
+PTU A 23% 1,87
+PTU C 5% 3,79
+Suma PTU 5,66
+Suma PLN 89,49
+Karta płatnicza 89,49
+Numer transakcji 9500
+Numer 7565250513950013
+Numer kasy 13
+Numer kasjera 5
+Data 13/05/2025 17:45:36
+CBB182E7520B47BA8565A3F531CFB8331B45842C
+FEAZ2202152598
+
+1000075659500195913627
+
+Numer karty: 99583**"**293
+
+
+2025-07-17 17:04:32,700 INFO [PDF] Dane wejściowe do inserta: {'store_name': 'BIEDRONKA', 'store_city': 'POZNAŃ', 'store_address': 'UL. PIĄTKOWSKA 78C', 'postal_code': '60-649', 'nip': '7791011327', 'receipt_number': '245063', 'date': '2025-05-13', 'time': '17:45:36', 'final_price': 89.49, 'total_discounts': 20.36, 'payment_name': '', 'products': [{'product_name': 'MydłoPłLindeChamomil', 'tax_type': 'A', 'quantity': 2, 'unit_price_before': 6.49, 'total_price_before': 12.98, 'unit_discount': -1.5, 'total_discount': -3.0, 'unit_after_discount': 7.99, 'total_after_discount': 15.98}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'LasagneDonat 1000g', 'tax_type': 'C', 'quantity': 3, 'unit_price_before': 18.99, 'total_price_before': 56.97, 'unit_discount': -3.0, 'total_discount': -9.0, 'unit_after_discount': 21.99, 'total_after_discount': 65.97}, {'product_name': 'ŚM PRIM 30 ZOT200G', 'tax_type': 'C', 'quantity': 2, 'unit_price_before': 4.59, 'total_price_before': 9.18, 'unit_discount': -1.6, 'total_discount': -3.2, 'unit_after_discount': 6.19, 'total_after_discount': 12.38}, {'product_name': 'BułkaŚniPełnoz73g', 'tax_type': 'C', 'quantity': 4, 'unit_price_before': 1.29, 'total_price_before': 5.16, 'unit_discount': -0.14, 'total_discount': -0.56, 'unit_after_discount': 1.43, 'total_after_discount': 5.72}]}
+2025-07-17 17:04:33,085 INFO Dodano paragon PDF: 245063 (2025-05-13)
+2025-07-17 17:04:33,086 INFO [PDF] Paragon PDF zapisany do bazy (ID: 74)
+2025-07-17 17:04:33,086 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmprzlmqire.pdf
+2025-07-17 17:14:11,649 INFO === Parser module imported: log file creation test ===
+2025-07-17 17:14:17,257 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmpmdw7tpnh.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 17:14:19,096 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-17 17:14:19,097 INFO [PDF] Tekst z PDF:
+BIEDRONKA "CODZIENNIE NISKIE CENY" 7565
+60-649 POZNAN UL. PIĄTKOWSKA 78C
+JERONIMO MARTINS POLSKA S.A.
+62-025 KOSTRZYN UL.ZNIWNA 5
+NIP 7791011327
+
+nr: 245063
+PARAGON FISKALNY
+Nazwa PTU Ilość Cena Wartość
+MydłoPłLindeChamomil A 2x 6,49 12,98
+Opust -3,00
+Szynka Mix 100g C 1x 7,29 7,29
+Opust -2,30
+Szynka Mix 100g c 1x 7,29 7,29
+Opust -2,30
+LasagneDonat 1000g c 3x 18,99 56,97
+Opust -9,00
+SerTwarChuDeli250g (e) 3x 3,66 10,98
+ŚM PRIM 30 ZOT200G c 2x 4,59 9,18
+Opust -3,20
+BułkaŚniPełnoz73g c 4x 1,29 5,16
+Opust -0,56
+Udzielono łącznie rabatów: 20,36
+Sprzedaż opodatkowana A 9,98
+Sprzedaż opodatkowana C 79,51
+PTU A 23% 1,87
+PTU C 5% 3,79
+Suma PTU 5,66
+Suma PLN 89,49
+Karta płatnicza 89,49
+Numer transakcji 9500
+Numer 7565250513950013
+Numer kasy 13
+Numer kasjera 5
+Data 13/05/2025 17:45:36
+CBB182E7520B47BA8565A3F531CFB8331B45842C
+FEAZ2202152598
+
+1000075659500195913627
+
+Numer karty: 99583**"**293
+
+
+2025-07-17 17:14:19,106 INFO [PDF] Dane wejściowe do inserta: {'store_name': 'BIEDRONKA', 'store_city': 'POZNAŃ', 'store_address': 'UL. PIĄTKOWSKA 78C', 'postal_code': '60-649', 'nip': '7791011327', 'receipt_number': '245063', 'date': '2025-05-13', 'time': '17:45:36', 'final_price': 89.49, 'total_discounts': 20.36, 'payment_name': '', 'products': [{'product_name': 'MydłoPłLindeChamomil', 'tax_type': 'A', 'quantity': 2, 'unit_price_before': 6.49, 'total_price_before': 12.98, 'unit_discount': -1.5, 'total_discount': -3.0, 'unit_after_discount': 7.99, 'total_after_discount': 15.98}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'LasagneDonat 1000g', 'tax_type': 'C', 'quantity': 3, 'unit_price_before': 18.99, 'total_price_before': 56.97, 'unit_discount': -3.0, 'total_discount': -9.0, 'unit_after_discount': 21.99, 'total_after_discount': 65.97}, {'product_name': 'ŚM PRIM 30 ZOT200G', 'tax_type': 'C', 'quantity': 2, 'unit_price_before': 4.59, 'total_price_before': 9.18, 'unit_discount': -1.6, 'total_discount': -3.2, 'unit_after_discount': 6.19, 'total_after_discount': 12.38}, {'product_name': 'BułkaŚniPełnoz73g', 'tax_type': 'C', 'quantity': 4, 'unit_price_before': 1.29, 'total_price_before': 5.16, 'unit_discount': -0.14, 'total_discount': -0.56, 'unit_after_discount': 1.43, 'total_after_discount': 5.72}]}
+2025-07-17 17:14:19,492 INFO Dodano paragon PDF: 245063 (2025-05-13)
+2025-07-17 17:14:19,493 INFO [PDF] Paragon PDF zapisany do bazy (ID: 75)
+2025-07-17 17:14:19,494 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmpmdw7tpnh.pdf
+2025-07-17 17:18:10,774 INFO === Parser module imported: log file creation test ===
+2025-07-17 17:19:11,249 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmplysf7d_w.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-17 17:19:13,449 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-17 17:19:13,450 INFO [PDF] Tekst z PDF:
+BIEDRONKA "CODZIENNIE NISKIE CENY" 7565
+60-649 POZNAN UL. PIĄTKOWSKA 78C
+JERONIMO MARTINS POLSKA S.A.
+62-025 KOSTRZYN UL.ZNIWNA 5
+NIP 7791011327
+
+nr: 245063
+PARAGON FISKALNY
+Nazwa PTU Ilość Cena Wartość
+MydłoPłLindeChamomil A 2x 6,49 12,98
+Opust -3,00
+Szynka Mix 100g C 1x 7,29 7,29
+Opust -2,30
+Szynka Mix 100g c 1x 7,29 7,29
+Opust -2,30
+LasagneDonat 1000g c 3x 18,99 56,97
+Opust -9,00
+SerTwarChuDeli250g (e) 3x 3,66 10,98
+ŚM PRIM 30 ZOT200G c 2x 4,59 9,18
+Opust -3,20
+BułkaŚniPełnoz73g c 4x 1,29 5,16
+Opust -0,56
+Udzielono łącznie rabatów: 20,36
+Sprzedaż opodatkowana A 9,98
+Sprzedaż opodatkowana C 79,51
+PTU A 23% 1,87
+PTU C 5% 3,79
+Suma PTU 5,66
+Suma PLN 89,49
+Karta płatnicza 89,49
+Numer transakcji 9500
+Numer 7565250513950013
+Numer kasy 13
+Numer kasjera 5
+Data 13/05/2025 17:45:36
+CBB182E7520B47BA8565A3F531CFB8331B45842C
+FEAZ2202152598
+
+1000075659500195913627
+
+Numer karty: 99583**"**293
+
+
+2025-07-17 17:19:13,461 INFO [PDF] Dane wejściowe do inserta: {'store_name': 'BIEDRONKA', 'store_city': 'POZNAŃ', 'store_address': 'UL. PIĄTKOWSKA 78C', 'postal_code': '60-649', 'nip': '7791011327', 'receipt_number': '245063', 'date': '2025-05-13', 'time': '17:45:36', 'final_price': 89.49, 'total_discounts': 20.36, 'payment_name': '', 'products': [{'product_name': 'MydłoPłLindeChamomil', 'tax_type': 'A', 'quantity': 2, 'unit_price_before': 6.49, 'total_price_before': 12.98, 'unit_discount': -1.5, 'total_discount': -3.0, 'unit_after_discount': 7.99, 'total_after_discount': 15.98}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'LasagneDonat 1000g', 'tax_type': 'C', 'quantity': 3, 'unit_price_before': 18.99, 'total_price_before': 56.97, 'unit_discount': -3.0, 'total_discount': -9.0, 'unit_after_discount': 21.99, 'total_after_discount': 65.97}, {'product_name': 'ŚM PRIM 30 ZOT200G', 'tax_type': 'C', 'quantity': 2, 'unit_price_before': 4.59, 'total_price_before': 9.18, 'unit_discount': -1.6, 'total_discount': -3.2, 'unit_after_discount': 6.19, 'total_after_discount': 12.38}, {'product_name': 'BułkaŚniPełnoz73g', 'tax_type': 'C', 'quantity': 4, 'unit_price_before': 1.29, 'total_price_before': 5.16, 'unit_discount': -0.14, 'total_discount': -0.56, 'unit_after_discount': 1.43, 'total_after_discount': 5.72}]}
+2025-07-17 17:19:13,890 INFO Dodano paragon PDF: 245063 (2025-05-13)
+2025-07-17 17:19:13,890 INFO [PDF] Paragon PDF zapisany do bazy (ID: 76)
+2025-07-17 17:19:13,891 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmplysf7d_w.pdf
+2025-07-17 17:37:53,303 INFO === Parser module imported: log file creation test ===
+2025-07-17 17:45:01,808 INFO === Parser module imported: log file creation test ===
+2025-07-17 17:49:24,855 INFO === Parser module imported: log file creation test ===
+2025-07-17 17:56:31,464 INFO === Parser module imported: log file creation test ===
+2025-07-17 17:58:40,218 INFO === Parser module imported: log file creation test ===
+2025-07-17 18:06:29,303 INFO === Parser module imported: log file creation test ===
+2025-07-17 18:16:01,674 INFO === Parser module imported: log file creation test ===
+2025-07-17 18:16:46,437 INFO === Parser module imported: log file creation test ===
+2025-07-17 18:19:54,004 INFO === Parser module imported: log file creation test ===
+2025-07-17 19:29:40,440 INFO === Parser module imported: log file creation test ===
+2025-07-17 19:42:58,904 INFO === Parser module imported: log file creation test ===
+2025-07-17 20:03:17,319 INFO === Parser module imported: log file creation test ===
+2025-07-17 20:26:42,267 INFO === Parser module imported: log file creation test ===
+2025-07-17 20:32:59,962 INFO === Parser module imported: log file creation test ===
+2025-07-17 20:42:47,360 INFO === Parser module imported: log file creation test ===
+2025-07-17 21:03:26,719 INFO === Parser module imported: log file creation test ===
+2025-07-17 21:21:36,247 INFO === Parser module imported: log file creation test ===
+2025-07-17 21:36:25,960 INFO === Parser module imported: log file creation test ===
+2025-07-17 21:38:21,444 INFO === Parser module imported: log file creation test ===
+2025-07-18 09:22:51,375 INFO === Parser module imported: log file creation test ===
+2025-07-18 09:25:24,054 INFO === Parser module imported: log file creation test ===
+2025-07-18 09:55:47,404 INFO === Parser module imported: log file creation test ===
+2025-07-18 09:59:29,985 INFO === Parser module imported: log file creation test ===
+2025-07-18 10:07:33,003 INFO === Parser module imported: log file creation test ===
+2025-07-18 10:18:23,938 INFO === Parser module imported: log file creation test ===
+2025-07-18 10:26:38,053 INFO === Parser module imported: log file creation test ===
+2025-07-18 10:34:52,154 INFO === Parser module imported: log file creation test ===
+2025-07-18 10:36:19,137 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmpr77nbw9q.pdf (oryginalnie: 13MAJA_PDF.pdf)
+2025-07-18 10:36:20,619 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-18 10:36:20,619 INFO [PDF] Tekst z PDF:
+BIEDRONKA "CODZIENNIE NISKIE CENY" 7565
+60-649 POZNAN UL. PIĄTKOWSKA 78C
+JERONIMO MARTINS POLSKA S.A.
+62-025 KOSTRZYN UL.ZNIWNA 5
+NIP 7791011327
+
+nr: 245063
+PARAGON FISKALNY
+Nazwa PTU Ilość Cena Wartość
+MydłoPłLindeChamomil A 2x 6,49 12,98
+Opust -3,00
+Szynka Mix 100g C 1x 7,29 7,29
+Opust -2,30
+Szynka Mix 100g c 1x 7,29 7,29
+Opust -2,30
+LasagneDonat 1000g c 3x 18,99 56,97
+Opust -9,00
+SerTwarChuDeli250g (e) 3x 3,66 10,98
+ŚM PRIM 30 ZOT200G c 2x 4,59 9,18
+Opust -3,20
+BułkaŚniPełnoz73g c 4x 1,29 5,16
+Opust -0,56
+Udzielono łącznie rabatów: 20,36
+Sprzedaż opodatkowana A 9,98
+Sprzedaż opodatkowana C 79,51
+PTU A 23% 1,87
+PTU C 5% 3,79
+Suma PTU 5,66
+Suma PLN 89,49
+Karta płatnicza 89,49
+Numer transakcji 9500
+Numer 7565250513950013
+Numer kasy 13
+Numer kasjera 5
+Data 13/05/2025 17:45:36
+CBB182E7520B47BA8565A3F531CFB8331B45842C
+FEAZ2202152598
+
+1000075659500195913627
+
+Numer karty: 99583**"**293
+
+
+2025-07-18 10:36:20,628 INFO [PDF] Dane wejściowe do inserta: {'store_name': 'BIEDRONKA', 'store_city': 'POZNAŃ', 'store_address': 'UL. PIĄTKOWSKA 78C', 'postal_code': '60-649', 'nip': '7791011327', 'receipt_number': '245063', 'date': '2025-05-13', 'time': '17:45:36', 'final_price': 89.49, 'total_discounts': 20.36, 'payment_name': '', 'products': [{'product_name': 'MydłoPłLindeChamomil', 'tax_type': 'A', 'quantity': 2, 'unit_price_before': 6.49, 'total_price_before': 12.98, 'unit_discount': -1.5, 'total_discount': -3.0, 'unit_after_discount': 7.99, 'total_after_discount': 15.98}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'Szynka Mix 100g', 'tax_type': 'C', 'quantity': 1, 'unit_price_before': 7.29, 'total_price_before': 7.29, 'unit_discount': -2.3, 'total_discount': -2.3, 'unit_after_discount': 9.59, 'total_after_discount': 9.59}, {'product_name': 'LasagneDonat 1000g', 'tax_type': 'C', 'quantity': 3, 'unit_price_before': 18.99, 'total_price_before': 56.97, 'unit_discount': -3.0, 'total_discount': -9.0, 'unit_after_discount': 21.99, 'total_after_discount': 65.97}, {'product_name': 'ŚM PRIM 30 ZOT200G', 'tax_type': 'C', 'quantity': 2, 'unit_price_before': 4.59, 'total_price_before': 9.18, 'unit_discount': -1.6, 'total_discount': -3.2, 'unit_after_discount': 6.19, 'total_after_discount': 12.38}, {'product_name': 'BułkaŚniPełnoz73g', 'tax_type': 'C', 'quantity': 4, 'unit_price_before': 1.29, 'total_price_before': 5.16, 'unit_discount': -0.14, 'total_discount': -0.56, 'unit_after_discount': 1.43, 'total_after_discount': 5.72}]}
+2025-07-18 10:36:20,709 INFO [PDF] Paragon już istnieje w bazie – pomijam.
+2025-07-18 10:36:20,735 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmpr77nbw9q.pdf
+2025-07-18 10:36:20,986 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmp98_7xl62.pdf (oryginalnie: chyba mama naklo historia_transakcji_2505106578167123.pdf)
+2025-07-18 10:36:22,284 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-18 10:36:22,285 INFO [PDF] Tekst z PDF:
+Sklep 7123 MROTECKA 37A
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+
+10.05.2025 20:25
+
+NIEFISKALNY
+PTU Ilość Cena Wartość
+WhiskeyGentjac0,71l A 1.000 x 126,99 126,99
+Rabat -12,00
+114,99
+WafelDareMilk50g c 1.000 x 2,29 2,29
+Sprzedaż opodatkowana A 114,99
+PTU A 23% 21,50
+Sprzedaż opodatkowana C 2,29
+PTU C 5% 0,11
+Suma PTU 21,61
+Suma PLN 117,28
+Kasa 16 Kasjer
+071236578195616
+Karta płatnicza 117,28
+Numer transakcji 6578
+7123/16/6578/10.05.2025 Strona 1zl1
+
+2025-07-18 10:36:22,290 INFO [PDF] Dane wejściowe do inserta: {'store_name': None, 'store_city': None, 'store_address': None, 'postal_code': None, 'nip': None, 'receipt_number': '6578', 'date': None, 'time': None, 'final_price': 117.28, 'total_discounts': 0.0, 'payment_name': '', 'products': []}
+2025-07-18 10:36:22,290 ERROR [PDF] Brak wymaganego pola: store_name w danych PDF!
+2025-07-18 10:36:22,291 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmp98_7xl62.pdf
+2025-07-18 10:36:22,293 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmp2obm7_5k.pdf (oryginalnie: historia_transakcji_2505027523016614.pdf)
+2025-07-18 10:36:24,941 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-18 10:36:24,942 INFO [PDF] Tekst z PDF:
+Sklep 6614 STAROGRACKA 8
+
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+
+02.05.2025 09:54
+
+NIEFISKALNY
+Nazwa PTU Ilość
+Piwo Żywiec 0,5l A 24.000
+
+Rabat
+Torba T-SHIRT A 1.000
+DaniBulkim117g c 1.000
+Rabat
+
+ZupaGulaszVifon68g c 1.000
+ZupaGulaszVifon68g c 1.000
+CiastkaKruszyn225g c 1.000
+CiastOwsianeCzek210 je 1.000
+WiejZiemWędzonkalz e 1.000
+ChrupkiCheetTost150: c 1.000
+waflekakKaoweBOoZUU( [e 1.000
+BułkaPoznańska75g je 1.000
+BułkaPoznańska75g c 1.000
+WafDareMultipa250g c 1.000
+PasztProfiMix131g c 1.000
+PasztProfiMix131g c 1.000
+Bułka ser żół 70g c 1.000
+BułkaŚniadan80g C 1.000
+
+Sprzedaż opodatkowana A
+PTU A 23%
+
+Sprzedaż opodatkowana C
+PTU C 5%
+
+6614/1/7523/02.05.2025
+
+Cena Wartość
+4,39 105,36
+-52,68
+
+52,68
+
+0,65 0,65
+5,49 5,49
+-1,50
+
+3,99
+
+1,79 1,79
+1,79 1,79
+4,99 4,99
+4,19 4,19
+6,59 6,59
+6,49 6,49
+5,75 5,75
+0,72 0,72
+0,72 0,72
+9,99 9,99
+2,59 2,59
+2,59 2,59
+1,52 1,52
+1,14 1,14
+53,33
+
+9,97
+
+54,85
+
+2,61
+
+Strona 1z2
+
+Suma PTU 12,58
+
+Suma PLN 108,18
+
+Kasa 1 Kasjer
+
+1000066147523194801159
+Karta płatnicza 108,18
+
+Numer transakcji 7523
+
+6614/1/7523/02.05.2025 Strona 2z2
+
+2025-07-18 10:36:24,949 INFO [PDF] Dane wejściowe do inserta: {'store_name': None, 'store_city': None, 'store_address': None, 'postal_code': None, 'nip': None, 'receipt_number': '7523', 'date': None, 'time': None, 'final_price': 108.18, 'total_discounts': 0.0, 'payment_name': '', 'products': []}
+2025-07-18 10:36:24,950 ERROR [PDF] Brak wymaganego pola: store_name w danych PDF!
+2025-07-18 10:36:24,950 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmp2obm7_5k.pdf
+2025-07-18 10:36:24,951 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmpumu2628f.pdf (oryginalnie: historia_transakcji_2506043307153109.pdf)
+2025-07-18 10:36:27,569 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-18 10:36:27,570 INFO [PDF] Tekst z PDF:
+Sklep 3109 STRÓŻYŃSKIEGO 21A
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+
+04.06.2025 19:46
+
+NIEFISKALNY
+
+Nazwa PTU Ilość Cena
+
+PiwoŁomżajasne0,5| A 1.000 x 3,99
+
+PiwoŁomżajasne0,5| A 1.000 x 3,99
+
+PiwoŁomżajasne0,5| A 1.000 x 3,99
+
+ChipsyLay sPap120g c 1.000 x 5,99
+
+JogPitMangoYopro270 c 1.000 x 5,99
+Rabat
+
+MUILDUDAILNOCOIŁUUC c 1.000 x 4,79
+
+JogPitMangoYopro270 c 1.000 x 5,99
+Rabat
+
+JogPitMangoYopro270 c 1.000 x 5,99
+Rabat
+
+Jogkitwaniiyoproz /ug c 1.000 x 5.99
+Rabat
+
+KotletDrob400g c 1.000 x 10,49
+Rabat
+
+KotletDrob400g c 1.000 x 10,49
+Rabat
+
+WafelDareMilk50g 1.000 x 2,29
+
+WafelDareMilk50g 1.000 x 2,29
+
+1.000 x 2,29
+
+c
+
+c
+WafelDareMilk50g c 1.000 x 2,29
+
+WafelDareMilk50g c
+
+A
+
+TorbaPapierowalszt 1.000 x 0,99
+
+Sprzedaż opodatkowana A
+PTU A 23%
+
+Wartość
+3,99
+3,99
+3,99
+5,99
+5,99
+
+-3,00
+2,99
+
+4,79
+5,99
+
+-2,99
+3,00
+
+5,99
+
+-3,00
+2,99
+
+5,99
+-2,99
+3,00
+
+10,49
+-3,50
+6,99
+
+10,49
+-3,50
+6,99
+
+2,29
+2,29
+2,29
+2,29
+0,99
+
+12,96
+2,42
+
+3109/15/3307/04.06.2025 Strona 1z2
+
+Sprzedaż opodatkowana C 45,90
+
+PTU C 5% 2,19
+Suma PTU 4,61
+Suma PLN 58,86
+
+Kasa 15 Kasjer
+
+1000031093307198115185
+Karta płatnicza 58,86
+
+Numer transakcji 3307
+
+3109/15/3307/04.06.2025 Strona 2z2
+
+2025-07-18 10:36:27,578 INFO [PDF] Dane wejściowe do inserta: {'store_name': None, 'store_city': None, 'store_address': None, 'postal_code': None, 'nip': None, 'receipt_number': '3307', 'date': None, 'time': None, 'final_price': 58.86, 'total_discounts': 0.0, 'payment_name': '', 'products': []}
+2025-07-18 10:36:27,579 ERROR [PDF] Brak wymaganego pola: store_name w danych PDF!
+2025-07-18 10:36:27,580 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmpumu2628f.pdf
+2025-07-18 10:36:27,581 INFO [PDF] Zapisano plik tymczasowy: /tmp/tmp8vuyfoe3.pdf (oryginalnie: historia_transakcji_2507100567144873.pdf)
+2025-07-18 10:36:28,930 INFO [PDF][OCR] Użyto pytesseract do rozpoznania tekstu z obrazu PDF.
+2025-07-18 10:36:28,931 INFO [PDF] Tekst z PDF:
+Sklep 4873 POŁABSKA
+
+Jeronimo Martins Polska S. A.
+ul. Żniwna 5, 62-025 Kostrzyn
+
+NIP 779-10-11-327
+
+10.07.2025 20:29
+
+Nazwa
+ChipsyLay'sSoczw200
+ChlebŻytNiskilG450g
+
+MUILDLUDAILNOCOI4UUC
+Rabat
+
+MuILbDUubalchocol4UUC
+Rabat
+
+SkyrDanioTruskaw27C
+
+Rabat
+
+SkyrDanioMangMar2 7
+
+Rabat
+
+NIEFISKALNY
+PTU Ilość
+e 1.000
+e 1.000
+e 1.000
+e 1.000
+je 1.000
+je 1.000
+
+Sprzedaż opodatkowana C
+
+PTU C 5%
+Suma PTU
+
+Suma PLN
+
+Kasa 14 Kasjer
+
+1000048730567201714250
+
+Karta płatnicza
+
+Numer transakcji
+
+4873/14/567/10.07.2025
+
+Cena
+
+9,49
+
+3,85
+
+4,79
+
+4,79
+
+4,79
+
+4,79
+
+Wartość
+
+9,49
+
+3,85
+
+4,79
+-1,00
+3,79
+
+4,79
+-1,00
+3,79
+
+4,79
+
+-1,30
+3,49
+
+4,79
+-1,30
+3,49
+
+27,90
+1,33
+1,33
+
+27,90
+
+27,90
+
+567
+
+Strona 1zl
+
+2025-07-18 10:36:28,937 INFO [PDF] Dane wejściowe do inserta: {'store_name': None, 'store_city': None, 'store_address': None, 'postal_code': None, 'nip': None, 'receipt_number': '4873', 'date': None, 'time': None, 'final_price': None, 'total_discounts': 0.0, 'payment_name': '', 'products': []}
+2025-07-18 10:36:28,937 ERROR [PDF] Brak wymaganego pola: store_name w danych PDF!
+2025-07-18 10:36:28,938 INFO [PDF] Usunięto plik tymczasowy: /tmp/tmp8vuyfoe3.pdf

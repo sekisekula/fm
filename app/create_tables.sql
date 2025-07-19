@@ -168,3 +168,16 @@ END $$;
 INSERT INTO users (user_id, name)
 SELECT 100, 'Inny'
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE user_id = 100);
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM information_schema.table_constraints
+        WHERE constraint_name = 'unique_receipt'
+          AND table_name = 'receipts'
+    ) THEN
+        ALTER TABLE receipts
+        ADD CONSTRAINT unique_receipt UNIQUE (receipt_number, date, store_id);
+    END IF;
+END $$;

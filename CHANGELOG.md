@@ -39,7 +39,7 @@ All notable changes to this project will be documented in this file.
 - New filter button 'Inne' in receipts browser to show only receipts for user 'Other'.
 - 'Podlicz' button in the receipt details modal for both counted and uncounted receipts, linking to the counting/editing view for that receipt.
 ### Changed
-- 'Wszystkie', 'Tylko podliczone', and 'Tylko rozliczone' filters now always exclude receipts for 'Other' (only users 1 and 2 are shown).
+- 'Wszystkie', 'Podliczone', and 'Rozliczone' filters now always exclude receipts for 'Other' (only users 1 and 2 are shown).
 ### Changed
 - Widened the receipt details modal (max-width: 1100px) for better desktop experience.
 - Increased padding in the products table and set minimum widths for 'Rabat' and 'Podział (udziały)' columns.
@@ -51,7 +51,7 @@ All notable changes to this project will be documented in this file.
 
 ### Dodano
 - **Nowy interfejs webowy do przeglądania paragonów** (`/browse-receipts/`)
-  - Filtrowanie paragonów: wszystkie, tylko podliczone, tylko rozliczone
+  - Filtrowanie paragonów: wszystkie, Podliczone, Rozliczone
   - Responsywny design z ciemnym motywem
   - Karty paragonów z podstawowymi informacjami
   - Modalne okno ze szczegółami paragonu
